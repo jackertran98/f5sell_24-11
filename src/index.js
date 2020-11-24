@@ -51,6 +51,9 @@ export default class App extends Component {
         break;
     }
   };
+  hanfamr=()=>{
+    
+  }
   onDownloadProgress = (downloadProgress) => {
     this.setState(
       {
