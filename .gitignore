@@ -1,0 +1,74 @@
+# OSX
+#
+.DS_Store
+
+# Xcode
+#
+build/
+*.pbxuser
+!default.pbxuser
+*.mode1v3
+!default.mode1v3
+*.mode2v3
+!default.mode2v3
+*.perspectivev3
+!default.perspectivev3
+xcuserdata
+*.xccheckout
+*.moved-aside
+DerivedData
+*.hmap
+*.ipa
+*.xcuserstate
+
+# Android/IntelliJ
+#
+build/
+.idea
+.gradle
+local.properties
+*.iml
+
+# node.js
+#
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# BUCK
+buck-out/
+\.buckd/
+*.keystore
+!debug.keystore
+
+# fastlane
+#
+# It is recommended to not store the screenshots in the git repo. Instead, use fastlane to re-generate the
+# screenshots whenever they are needed.
+# For more information about the recommended setup visit:
+# https://docs.fastlane.tools/best-practices/source-control/
+
+*/fastlane/report.xml
+*/fastlane/Preview.html
+*/fastlane/screenshots
+
+# Bundle artifact
+*.jsbundle
+
+# CocoaPods
+/ios/Pods/
+*.lock
+*.lock
+*.bin
+*.lock
+android/app/build/generated/res/resValues/debug/values/gradleResValues.xml
+android/.gradle/6.0.1/executionHistory/executionHistory.bin
+android/.gradle/6.0.1/fileHashes/fileHashes.bin
+*.lock
+android/.gradle/6.0.1/executionHistory/executionHistory.lock
+android/.gradle/6.0.1/executionHistory/executionHistory.bin
+*.lock
+*.bin
+*.lock
+android/.gradle/6.0.1/executionHistory/executionHistory.lock
+android/.gradle/6.0.1/executionHistory/executionHistory.bin
