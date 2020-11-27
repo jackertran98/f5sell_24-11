@@ -5,6 +5,7 @@ import moment from "moment";
 import { sizeHeight, sizeWidth } from '../../../../utils/helper/size.helper';
 import { connect } from 'react-redux';
 var numeral = require("numeral");
+import DropDownPicker from 'react-native-dropdown-picker';
 import { ReportDefault } from "../../../../service/account";
 import { TextInput } from 'react-native-paper';
 class ReportMonth extends Component {
@@ -40,17 +41,33 @@ class ReportMonth extends Component {
             <View >
                 <View style={{flexDirection:'row',alignItems:'center',padding:10}}>
                     <Text>Chọn năm</Text>
-                    <View style={styles.container}>
-                        <Picker
-                            selectedValue={selectedValue}
-                            style={{ height: 35, width: sizeWidth(27)}}
-                            onValueChange={(itemValue, itemIndex) => this.setState({ selectedValue: itemValue },()=>{
-                                this.handLoad()
-                            })}
-                        >
-                            <Picker.Item label="2019" value="2019" />
-                            <Picker.Item label="2020" value="2020" />
-                        </Picker>
+                              <View
+                        style={{
+
+                            // The solution: Apply zIndex to any device except Android
+                            ...(Platform.OS !== 'android' && {
+                                zIndex: 10
+                            })
+
+                        }}
+                    >
+                        <DropDownPicker
+                            items={[
+                                { label: '2019', value: '2019' },
+                                { label: '2020', value: '2020' }
+                            ]}
+                            defaultValue={selectedValue}
+                            placeholder="- Tất cả -"
+                            containerStyle={{ height: 40 }}
+                            style={{ backgroundColor: '#fafafa', width: sizeWidth(35), borderColor: '#E1AC06', borderWidth: 2 }}
+                            itemStyle={{
+                                justifyContent: 'flex-start'
+                            }}
+                            dropDownStyle={{ backgroundColor: '#fafafa', width: sizeWidth(35) }}
+                            onChangeItem={item => this.setState({
+                                selectedValue: item.value
+                            }, () => { this.handLoad() })}
+                        />
                     </View>
                 </View>
                 <ScrollView horizontal={true}>
@@ -94,8 +111,8 @@ const mapStateToProps = (state) => {
 const styles = StyleSheet.create({
     container:{
         borderColor:'#E1AC06',
-        borderWidth:2,
-        borderRadius:10,
+        borderWidth:1.5,
+        borderRadius:5,
         marginLeft:10,
     },  
     mainUser: {

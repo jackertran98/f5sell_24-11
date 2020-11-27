@@ -40,6 +40,7 @@ class InfoCTV extends Component {
             IDSHOP: this.props.idshop.USER_CODE,
         })
             .then((result) => {
+                console.log("aaaaaaaaaaaaaa",result)
                 if (result.data.ERROR === "0000") {
                     this.setState({ data: result.data.INFO }
                     );

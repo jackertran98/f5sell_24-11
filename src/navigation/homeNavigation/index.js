@@ -538,6 +538,39 @@ MyHomeStack = (props) => {
             backgroundColor: COLOR.HEADER,
           },
           headerTintColor: '#fff',
+          headerRight: () => {
+            return (
+                <View>
+                  <TouchableOpacity
+                    style={{marginRight: sizeWidth(3) }}
+                  >
+                    {authUser.GROUPS!=3?<HeaderLeftComponet
+                      navigation={navigation}
+                      onPress={() =>
+                        navigation.navigate("Carts", {
+                          NAME: "HomePay",
+                        })
+                      }
+                      name="shopping-cart"
+                      size={sizeFont(6)}
+                      color="white"
+                    />:null}
+                    {listItem.length != 0 ? (
+                      <View style={styles.viewList}>
+                        <Text
+                          style={{
+                            color: "#fff",
+                            textAlign: "center",
+                            fontSize: sizeFont(3),
+                          }}
+                        >
+                          {listItem.length}
+                        </Text>
+                      </View>
+                    ) : null}
+                  </TouchableOpacity>
+                </View>
+            )}
         })}
       />
       <HomeStack.Screen

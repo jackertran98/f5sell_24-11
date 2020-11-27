@@ -40,7 +40,7 @@ export const getDetailOrdered = (data) => {
 export const orderProduct  = (data) => {
   return new Promise((resolve, reject) => {
     return api
-      .post("order_product", data, {
+      .post("order_product3", data, {
         // paramsSerializer: (params) => {
         //   return qs.stringify(params, { arrayFormat: "repeat" });
         // },

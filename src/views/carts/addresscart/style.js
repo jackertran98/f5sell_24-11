@@ -128,6 +128,49 @@ const styles = StyleSheet.create({
     textAlign: "center",
     textDecorationLine: "underline",
   },
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: "#E1AC06",
+    borderRadius: 10,
+    width:sizeWidth(90),
+    height:sizeHeight(50),
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 1,
+    shadowRadius: 3.84,
+    elevation: 5
+  },
+  textStyle: {
+    color: "black",
+    fontWeight: "bold",
+    textAlign: "center"
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: "center"
+  },
+  openButton:{
+    position:'absolute',
+    right:-5,
+    top:-5,
+    width:sizeWidth(7),
+    height:sizeHeight(3.5),
+    backgroundColor:'white',
+    borderWidth:1,
+    borderColor:'black',
+    borderRadius:50,
+    justifyContent:'center',
+    alignItems:'center',
+  }
 });
 
 export default styles;

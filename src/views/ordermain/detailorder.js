@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { StyleSheet, Text, View, TouchableOpacity, Image, Picker, ScrollView, TextInput } from 'react-native'
+import { StyleSheet, Text, View, TouchableOpacity, Image, Picker, ScrollView, TextInput, Alert } from 'react-native'
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import moment from "moment";
 import { sizeFont, sizeHeight, sizeWidth } from '../../utils/helper/size.helper';
@@ -194,7 +194,9 @@ class OrderMain extends Component {
             city,
             district,
             address,
-            List
+            List,
+            setSelectedValue,
+            text
         } = this.state;
         var result = this.handleNumber(List);
         console.log("this is watting", result);
@@ -227,7 +229,6 @@ class OrderMain extends Component {
                 if (List.length != 0) {
                     result = await this.handleNumber(List);
                 }
-                console.log("this is result", result);
                 updateOrder({
                     USERNAME: this.props.authUser.USERNAME,
                     CODE_PRODUCT: result.CODE_PRODUCT,
@@ -241,10 +242,10 @@ class OrderMain extends Component {
                     ID_DISTRICT: district.MAQH,
                     ADDRESS: address,
                     CODE_ORDER: result.ID_CODE_ORDER,
-                    STATUS: 2,
+                    STATUS: setSelectedValue,
                     EXTRA_SHIP: "10000",
                     TIME_RECEIVER: '31/05/2019 14:00:00',
-                    NOTE: 'this is note my admin',
+                    NOTE: text,
                     DISTCOUNT: '',
                     IDSHOP: this.props.idshop.USER_CODE,
                 })
@@ -254,16 +255,12 @@ class OrderMain extends Component {
                             this.setState(
                                 {
                                     loading: false,
-                                    message: result.data.RESULT,
+                                   
                                 }
                             );
+                            Alert.alert("Thông báo",`${result.data.RESULT}`)
                         } else {
-                            this.setState(
-                                {
-                                    loading: false,
-                                    message: result.data.RESULT,
-                                }
-                            );
+                            Alert.alert("Thông báo",`${result.data.RESULT}`)
                         }
                     })
                     .catch((error) => {
@@ -272,15 +269,16 @@ class OrderMain extends Component {
             })
     };
     componentDidMount() {
-        
+
         this.handleLoad();
     }
     render() {
         const { selectedValue, Data, loading, List, message, setSelectedValue } = this.state;
         console.log("this is data", List);
-        console.log("data full ", Data)
+        console.log("data full ", Data);
         // console.log("this is List", List);
-        const { ID } = this.props.route.params;
+        const { ID,STATUS } = this.props.route.params;
+        console.log("this is status",STATUS);
         var sumMoney = 0;
         var sumRose = 0;
 
@@ -294,10 +292,10 @@ class OrderMain extends Component {
             } else { }
         }
         const sumAllMoney = () => {
-            if(List.length!=0){
-                return sumMoney + parseFloat(Data.EXTRA_SHIP)-List[0].DISCOUNT;
+            if (List.length != 0) {
+                return sumMoney + parseFloat(Data.EXTRA_SHIP) - List[0].DISCOUNT;
             }
-           
+
         }
         const discount = () => {
             if (List.length != 0) {
@@ -308,181 +306,182 @@ class OrderMain extends Component {
                 return sumRose;
             } else { }
         }
-        console.log("duss csd", discount())
         return (
             <View>
-                {!loading?null:            <View style={{ marginBottom: 20 }}>
-                <ScrollView>
-                    <View style={{ height: sizeHeight(5), flexDirection: 'column', justifyContent: 'center', paddingLeft: 10 }}>
-                        <Text style={{ fontWeight: 'bold' }}>Mã HĐ: {Data.ID_CODE_ORDER}</Text>
-                    </View>
-                    <View style={{ height: 35, paddingLeft: 10, backgroundColor: '#149CC6', justifyContent: 'center' }}>
-                        <Text style={{ color: '#fff' }}>Thông tin CTV</Text>
-                    </View>
-                    <View style={{ padding: 10 }}>
-                        <Text>{Data.FULL_NAME_CTV}</Text>
-                        <Text>Mã CTV: {Data.USER_CODE}</Text>
-                        <Text>Số điện thoại: {Data.MOBILE}</Text>
-                        <Text>Email: {Data.EMAIL}</Text>
-                    </View>
-                    <View style={{ height: 35, backgroundColor: '#149CC6', justifyContent: 'center' }}>
-                        <Text style={{ color: '#fff', paddingLeft: 10 }}>Nội dung đơn hàng</Text>
-                    </View>
-                    <View>
-
-                        <View style={{ flexDirection: 'row', alignItems: 'center', paddingLeft: 7 }}>
-                            <Image source={require("../../assets/images/clock.png")}
-                                style={{ width: 20, height: 40 }}
-                            />
-                            <Text style={{ fontStyle: 'italic' }}>{Data.CREATE_DATE}</Text>
+                {!loading ? null : <View style={{ marginBottom: 20 }}>
+                    <ScrollView>
+                        <View style={{ height: sizeHeight(5), flexDirection: 'column', justifyContent: 'center', paddingLeft: 10 }}>
+                            <Text style={{ fontWeight: 'bold' }}>Mã HĐ: {Data.ID_CODE_ORDER}</Text>
                         </View>
-                        {List.length === 0 ? null : List.map((Val, key) => (
-                            <View>
-                                <View key={key}>
-                                    <View style={{ flexDirection: 'row', borderColor: '#CBD3D3', borderWidth: 1, margin: 5 }}>
-                                        <View style={{ width: sizeWidth(30), borderRightColor: '#CBD3D3', borderRightWidth: 1, height: sizeHeight(20), alignItems: 'center', justifyContent: 'center' }}>
-                                            <Image
-                                                source={{ uri: Val.IMAGE_COVER }}
-                                                style={{ width: sizeWidth(20), height: sizeHeight(10) }}
-                                            />
-                                        </View>
-                                        <View style={{ width: sizeWidth(70), padding: 5 }}>
-                                            <Text style={{fontWeight:'bold',fontSize:sizeFont(4)}}>{Val.PRODUCT_NAME}</Text>
-                                            <Text>Mã sản phẩm: {Val.CODE_PRODUCT}</Text>
-                                            <Text>Đơn giá: <Text style={{color:'red'}}>{numeral(Val.PRICE).format("0,0")} đ</Text></Text>
-                                            <Text>Số lượng: {Val.NUM}</Text>
-                                            <Text>Hoa hồng: <Text style={{color:"#149CC6"}}>{Val.COMISSION_PRODUCT}%</Text></Text>
+                        <View style={{ height: 35, paddingLeft: 10, backgroundColor: '#149CC6', justifyContent: 'center' }}>
+                            <Text style={{ color: '#fff' }}>Thông tin CTV</Text>
+                        </View>
+                        <View style={{ padding: 10 }}>
+                            <View style={{flexDirection:'row',justifyContent:'space-between'}}>
+                                <Text>{Data.FULL_NAME_CTV}</Text>
+                                <Text style={{backgroundColor:'#E1AC06',padding:2,color:'#fff'}}>{this.props.authUser.GROUPS==5?"CTV":"KH"}</Text>
+                            </View>
+                            <Text>Mã CTV: {Data.USER_CODE}</Text>
+                            <Text>Số điện thoại: {Data.MOBILE}</Text>
+                            <Text>Email: {Data.EMAIL}</Text>
+                        </View>
+                        <View style={{ height: 35, backgroundColor: '#149CC6', justifyContent: 'center' }}>
+                            <Text style={{ color: '#fff', paddingLeft: 10 }}>Nội dung đơn hàng</Text>
+                        </View>
+                        <View>
+
+                            <View style={{ flexDirection: 'row', alignItems: 'center', paddingLeft: 7 }}>
+                                <Image source={require("../../assets/images/clock.png")}
+                                    style={{ width: 20, height: 40 }}
+                                />
+                                <Text style={{ fontStyle: 'italic' }}>{Data.CREATE_DATE}</Text>
+                            </View>
+                            {List.length === 0 ? null : List.map((Val, key) => (
+                                <View>
+                                    <View key={key}>
+                                        <View style={{ flexDirection: 'row', borderColor: '#CBD3D3', borderWidth: 1, margin: 5 }}>
+                                            <View style={{ width: sizeWidth(30), borderRightColor: '#CBD3D3', borderRightWidth: 1, height: sizeHeight(20), alignItems: 'center', justifyContent: 'center' }}>
+                                                <Image
+                                                    source={{ uri: Val.IMAGE_COVER }}
+                                                    style={{ width: sizeWidth(20), height: sizeHeight(10) }}
+                                                />
+                                            </View>
+                                            <View style={{ width: sizeWidth(70), padding: 5 }}>
+                                                <Text style={{ fontWeight: 'bold', fontSize: sizeFont(4) }}>{Val.PRODUCT_NAME}</Text>
+                                                <Text>Mã sản phẩm: {Val.CODE_PRODUCT}</Text>
+                                                <Text>Đơn giá: <Text style={{ color: 'red' }}>{numeral(Val.PRICE).format("0,0")} đ</Text></Text>
+                                                <Text>Số lượng: {Val.NUM}</Text>
+                                                <Text>Hoa hồng: <Text style={{ color: "#149CC6" }}>{Val.COMISSION_PRODUCT}%</Text></Text>
+                                            </View>
                                         </View>
                                     </View>
                                 </View>
-                            </View>
-                        ))}
-                        <View style={{ flexDirection: 'row' }}>
-                            <View style={{ width: sizeWidth(30) }}>
-
-                            </View>
-                            <View>
-                                <View style={{ flexDirection: 'row', width: sizeWidth(70), padding: 10, justifyContent: 'space-between' }}>
-                                    <Text>Thành tiền</Text>
-                                    <Text style={{ color: 'red', fontWeight: 'bold' }}>
-                                        {numeral(handleTotlaMoney()).format("0,0")} đ
+                            ))}
+                            <View style={{ flexDirection: 'row' }}>
+                               
+                                <View>
+                                    <View style={{ flexDirection: 'row', width: sizeWidth(100), padding: 10, justifyContent:"space-between" }}>
+                                        <Text>Thành tiền</Text>
+                                        <Text style={{ color: 'red', fontWeight: 'bold' }}>
+                                            {numeral(handleTotlaMoney()).format("0,0")} đ
                                     </Text>
-                                </View>
-                                <View style={{ flexDirection: 'row', width: sizeWidth(70), padding: 10, justifyContent: 'space-between' }}>
-                                    <Text>Tiền giảm giá</Text>
-                                    <Text style={{ color: '#149CC6', fontWeight: 'bold' }}>
-                                        {List.length != 0 ? numeral(List[0].DISCOUNT).format("0,0") : null} đ
+                                    </View>
+                                    <View style={{ flexDirection: 'row', width: sizeWidth(100), padding: 10, justifyContent:"space-between" }}>
+                                        <Text>Tiền giảm giá</Text>
+                                        <Text style={{ color: '#149CC6', fontWeight: 'bold' }}>
+                                            {List.length != 0 ? numeral(List[0].DISCOUNT).format("0,0") : null} đ
                                     </Text>
+                                    </View>
+                                    <View style={{ flexDirection: 'row', width: sizeWidth(100), padding: 10, paddingTop: 0, justifyContent:"space-between" }}>
+                                        <Text>Phí vận chuyển</Text>
+                                        <Text style={{ color: 'red', fontWeight: 'bold' }}>{numeral(Data.EXTRA_SHIP).format("0,0")} đ</Text>
+                                    </View>
+                                    <View style={{ flexDirection: 'row', width: sizeWidth(100), padding: 10, paddingTop: 0, justifyContent:"space-between" }}>
+                                        <Text>Tổng tiền thanh toán</Text>
+                                        <Text style={{ color: 'red', fontWeight: 'bold' }}>{numeral(sumAllMoney()).format("0,0")} đ</Text>
+                                    </View>
                                 </View>
-                                <View style={{ flexDirection: 'row', width: sizeWidth(70), padding: 10, paddingTop: 0, justifyContent: 'space-between' }}>
-                                    <Text>Phí vận chuyển</Text>
-                                    <Text style={{ color: 'red', fontWeight: 'bold' }}>{numeral(Data.EXTRA_SHIP).format("0,0")} đ</Text>
-                                </View>
-                                <View style={{ flexDirection: 'row', width: sizeWidth(70), padding: 10, paddingTop: 0, justifyContent: 'space-between' }}>
-                                    <Text>Tổng tiền thanh toán</Text>
-                                    <Text style={{ color: 'red', fontWeight: 'bold' }}>{numeral(sumAllMoney()).format("0,0")} đ</Text>
-                                </View>
+
                             </View>
-
                         </View>
-                    </View>
-                    <View>
-                        <View style={styles.status}>
-                            <View style={styles.status1}><Text>Người nhận</Text></View>
-                            <View style={styles.status2}><Text>{Data.FULLNAME_RECEIVER}</Text></View>
+                        <View>
+                            <View style={styles.status}>
+                                <View style={styles.status1}><Text>Người nhận</Text></View>
+                                <View style={styles.status2}><Text>{Data.FULLNAME_RECEIVER}</Text></View>
+                            </View>
+                            <View style={styles.status}>
+                                <View style={styles.status1}><Text>Số điện thoại</Text></View>
+                                <View style={styles.status2}><Text>{Data.MOBILE_RECEIVER}</Text></View>
+                            </View>
+                            <View style={styles.status}>
+                                <View style={styles.status1}><Text>Nhận hàng tại</Text></View>
+                                <View style={styles.status2}><Text>{Data.ADDRESS_RECEIVER}</Text></View>
+                            </View>
                         </View>
-                        <View style={styles.status}>
-                            <View style={styles.status1}><Text>Số điện thoại</Text></View>
-                            <View style={styles.status2}><Text>{Data.MOBILE_RECEIVER}</Text></View>
+                        <View style={{ height: 35, backgroundColor: '#149CC6', marginTop: sizeHeight(5), justifyContent: 'center' }}>
+                            <Text style={{ color: '#fff', paddingLeft: 5 }}>Tình trạng đơn hàng</Text>
                         </View>
-                        <View style={styles.status}>
-                            <View style={styles.status1}><Text>Địa chỉ</Text></View>
-                            <View style={styles.status2}><Text>{Data.ADDRESS_RECEIVER}</Text></View>
-                        </View>
-                    </View>
-                    <View style={{ height: 35, backgroundColor: '#149CC6', marginTop: sizeHeight(5), justifyContent: 'center' }}>
-                        <Text style={{ color: '#fff', paddingLeft: 5 }}>Tình trạng đơn hàng</Text>
-                    </View>
 
 
-                    {/* trạng thái */}
-                    <View style={{ padding: 5 }}>
-                        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-                            <Text>Trạng thái: </Text>
-                            <View
-                                style={{
+                        {/* trạng thái */}
+                        <View style={{ padding: 5 }}>
+                            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                                <Text>Trạng thái: </Text>
+                                <View
+                                    style={{
 
-                                    // The solution: Apply zIndex to any device except Android
-                                    ...(Platform.OS !== 'android' && {
-                                        zIndex: 10
-                                    })
+                                        // The solution: Apply zIndex to any device except Android
+                                        ...(Platform.OS !== 'android' && {
+                                            zIndex: 10
+                                        })
 
-                                }}
-                            >
-                                <DropDownPicker
-                                    items={[
-                                        { label: 'Đã tiếp nhận', value: '0' },
-                                        { label: 'Huỷ', value: '1' }
-                                    ]}
-                                    defaultValue={setSelectedValue}
-                                    placeholder="Trạng thái"
-                                    containerStyle={{ height: sizeHeight(5) }}
-                                    style={{ backgroundColor: '#fafafa', width: sizeWidth(40), borderColor: '#E1AC06', borderWidth: 1, backgroundColor: '#E1AC06' }}
-                                    itemStyle={{
-                                        justifyContent: 'flex-start'
                                     }}
-                                    dropDownStyle={{ backgroundColor: '#fafafa', width: sizeWidth(40) }}
-                                    onChangeItem={item => this.setState({
-                                        setSelectedValue: item.value
-                                    })}
-                                />
-                            </View>
-                        </View>
-                        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 10, zIndex: -1 }}>
-                            <Text>Thời gian dự kiến nhận hàng: </Text>
-                            <View style={styles.confix15}>
-                                <TouchableOpacity
-                                    onPress={this.showDatePicker2}
-                                    style={{ flexDirection: 'row', alignItems: 'center' }}
                                 >
-                                    <Image
-                                        source={require('../../assets/images/lich.png')}
-                                        style={{ width: 20, height: 20 }}
+                                    <DropDownPicker
+                                        items={[
+                                            { label: 'Đã tiếp nhận', value: '0' },
+                                            { label: 'Huỷ', value: '1' }
+                                        ]}
+                                        defaultValue={setSelectedValue}
+                                        placeholder="Trạng thái"
+                                        containerStyle={{ height: sizeHeight(5) }}
+                                        style={{ backgroundColor: '#fafafa', width: sizeWidth(40), borderColor: '#E1AC06', borderWidth: 1, backgroundColor: '#E1AC06' }}
+                                        itemStyle={{
+                                            justifyContent: 'flex-start'
+                                        }}
+                                        dropDownStyle={{ backgroundColor: '#fafafa', width: sizeWidth(40) }}
+                                        onChangeItem={item => this.setState({
+                                            setSelectedValue: item.value
+                                        })}
                                     />
-                                    <Text style={{ fontSize: 12 }}>{this.state.endTime}</Text>
-                                </TouchableOpacity>
-                                <DateTimePickerModal
-                                    isVisible={this.state.inDateEndPicker}
-                                    mode="date"
-                                    onConfirm={this.handleConfirm2}
-                                    onCancel={this.hideDatePicker2}
+                                </View>
+                            </View>
+                            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 10, zIndex: -1 }}>
+                                <Text>Thời gian dự kiến nhận hàng: </Text>
+                                <View style={styles.confix15}>
+                                    <TouchableOpacity
+                                        onPress={this.showDatePicker2}
+                                        style={{ flexDirection: 'row', alignItems: 'center' }}
+                                    >
+                                        <Image
+                                            source={require('../../assets/images/lich.png')}
+                                            style={{ width: 20, height: 20 }}
+                                        />
+                                        <Text style={{ fontSize: 12 }}>{this.state.endTime}</Text>
+                                    </TouchableOpacity>
+                                    <DateTimePickerModal
+                                        isVisible={this.state.inDateEndPicker}
+                                        mode="date"
+                                        onConfirm={this.handleConfirm2}
+                                        onCancel={this.hideDatePicker2}
+                                    />
+                                </View>
+                            </View>
+                            <View style={{ zIndex: -1 }}>
+                                <Text>Ghi chú: </Text>
+                                <TextInput
+                                    multiline={true}
+                                    numberOfLines={4}
+                                    onChangeText={(text) => this.setState({ text })}
+                                    value={Data.NOTE}
+                                    style={{ borderBottomColor: "#4B4C4B", borderWidth: 1, borderRadius: 5,paddingLeft:10 }}
                                 />
                             </View>
+                            <View style={{ justifyContent: 'center', flexDirection: 'row', marginTop: 10 }}>
+                                <TouchableOpacity
+                                    onPress={() => { this.handleBook() }}
+                                    disabled={STATUS==1?false:true}
+                                    style={{
+                                        borderWidth: 1, borderColor: '#E1AC06', paddingLeft: 30, paddingRight: 30, paddingTop: 10, paddingBottom: 10
+                                        , backgroundColor: '#E1AC06', alignItems: 'center', borderRadius: 10
+                                    }}
+                                >
+                                    <Text style={{color:'#fff'}}>Cập nhật</Text>
+                                </TouchableOpacity>
+                            </View>
                         </View>
-                        <View style={{ zIndex: -1 }}>
-                            <Text>Ghi chú: </Text>
-                            <TextInput
-                                multiline={true}
-                                numberOfLines={4}
-                                onChangeText={(text) => this.setState({ text })}
-                                value={this.state.text}
-                                style={{ borderBottomColor: "#4B4C4B", borderWidth: 1, borderRadius: 5 }}
-                            />
-                        </View>
-                        <View style={{ justifyContent: 'center', flexDirection: 'row', marginTop: 10 }}>
-                            <TouchableOpacity
-                                onPress={() => { this.handleBook() }}
-                                style={{
-                                    borderWidth: 1, borderColor: '#E1AC06', paddingLeft: 30, paddingRight: 30, paddingTop: 10, paddingBottom: 10
-                                    , backgroundColor: '#E1AC06', alignItems: 'center', borderRadius: 10
-                                }}
-                            >
-                                <Text>Cập nhật</Text>
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-                </ScrollView>
-            </View>}
+                    </ScrollView>
+                </View>}
             </View>
         )
     }

@@ -191,7 +191,7 @@ export default class SignUp extends Component {
             type="phone"
             size={sizeFont(6)}
             value={cityText}
-            onChangeText={(text) => this.props.navigation.navigate("ListCountries")}
+            onChangeText={(text) => this.setState({ cityText: text })}
             // primary={"#017DFF"}
             primary={"#fff"}
             color={COLOR.COLOR_ICON}

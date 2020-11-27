@@ -3,17 +3,7 @@ import React, { Component, PureComponent } from "react";
 import {
     View,
     Text,
-    FlatList,
-    TouchableOpacity,
-    ActivityIndicator,
-    SafeAreaView,
-    RefreshControl,
     ScrollView,
-    SectionList,
-    StatusBar,
-    TextInput,
-    Animated,
-    Image,
     StyleSheet,
     Picker
 } from "react-native";
@@ -22,6 +12,7 @@ import { _retrieveData } from "../../../utils/asynStorage";
 import _ from "lodash";
 import { DataTable } from 'react-native-paper';
 import Header from "../../rose/header/index";
+import DropDownPicker from 'react-native-dropdown-picker';
 import CtvSub from "../subchilditem/ctvsub";
 
 import {
@@ -35,12 +26,12 @@ import { handleMoney } from "../../../components/money";
 import { GetwithdrawalCTV } from "../../../service/rose";
 var numeral = require("numeral");
 
-class getwithdawal extends PureComponent {
+class getwithdawal extends Component {
     constructor(props) {
         super(props);
         this.state = {
             data_tt: [],
-            setSelectedValue: 'Tất cả'
+            selectedValue: 'CHƯA XỬ LÝ',
         };
     }
     handleLoad = async () => {
@@ -65,7 +56,7 @@ class getwithdawal extends PureComponent {
             authUser,
             username,
         } = this.props;
-        const { data_tt, setSelectedValue } = this.state;
+        const { data_tt, selectedValue } = this.state;
 
         return (
             <View>
@@ -93,6 +84,37 @@ class getwithdawal extends PureComponent {
                 </View> */}
                 <View>
                     <View>
+                        <View>
+                            <Text>Vui lòng chọn trạng thái</Text>
+                            {/* <View
+                                style={{
+
+                                    // The solution: Apply zIndex to any device except Android
+                                    ...(Platform.OS !== 'android' && {
+                                        zIndex: 10
+                                    })
+
+                                }}
+                            >
+                                <DropDownPicker
+                                    items={[
+                                        { label: 'ĐÃ ĐỒNG Ý', value: '1' },
+                                        { label: 'ĐÃ TỪ CHỐI', value: '2' },
+                                        { label: 'TẤT CẢ TRẠNG THÁI', value: '3' }
+                                    ]}
+                                    defaultValue={selectedValue}
+                                    containerStyle={{ height: 40 }}
+                                    style={{ backgroundColor: '#fafafa', width: sizeWidth(38), borderColor: '#E1AC06', borderWidth: 2 }}
+                                    itemStyle={{
+                                        justifyContent: 'flex-start'
+                                    }}
+                                    dropDownStyle={{ backgroundColor: '#fafafa', width: sizeWidth(38) }}
+                                    onChangeItem={item => this.setState({
+                                        selectedValue: item.value
+                                    })}
+                                />
+                            </View> */}
+                        </View>
                         <View style={styles.container1}>
                             <View style={[styles.cuttoms, styles.children1]}>
                                 <Text style={{ color: 'white' }}>Nội dung</Text>
@@ -101,7 +123,7 @@ class getwithdawal extends PureComponent {
                                 <Text style={{ color: 'white' }}>Trạng thái</Text>
                             </View>
                         </View>
-                        <ScrollView style={{ marginTop: sizeHeight(0), height: sizeHeight(100), borderColor: '#149CC6',borderTopColor:'#fff', borderWidth: 2,zIndex:0 }}>
+                        <ScrollView style={{ marginTop: sizeHeight(0), height: sizeHeight(100), borderColor: '#149CC6', borderTopColor: '#fff', borderWidth: 2, zIndex: 0 }}>
                             <View>
                                 {data_tt.map((Val, key) => (
                                     <View>
@@ -109,11 +131,11 @@ class getwithdawal extends PureComponent {
                                             <View style={styles.children}>
                                                 <Text >CTV: {Val.FULL_NAME}</Text>
                                                 <Text >Thời gian: {Val.UPDATE_TIME}</Text>
-                                                <Text >Số dư lúc yêu cầu: {numeral( Val.BALANCE ).format("0,0")} đ</Text>
-                                                <Text>Yêu cầu rút: <Text style={{color:'red',fontWeight:'bold'}}>{numeral( Val.AMOUNT ).format("0,0")} đ</Text></Text>
+                                                <Text >Số dư lúc yêu cầu: {numeral(Val.BALANCE).format("0,0")} đ</Text>
+                                                <Text>Yêu cầu rút: <Text style={{ color: 'red', fontWeight: 'bold' }}>{numeral(Val.AMOUNT).format("0,0")} đ</Text></Text>
                                             </View>
                                             <View style={styles.children2}>
-                                                {Val.IS_PROCESS===1?<Text style={{backgroundColor:'#149CC6',padding: 5,paddingLeft:20,paddingRight:20}}>Đồng ý</Text>:<Text style={{backgroundColor:'#E1AC06',padding: 5,paddingLeft:20,paddingRight:20}}>Từ chối</Text>}
+                                                {Val.IS_PROCESS === 1 ? <Text style={{ backgroundColor: '#149CC6', padding: 5, paddingLeft: 20, paddingRight: 20 }}>Đồng ý</Text> : <Text style={{ backgroundColor: '#E1AC06', padding: 5, paddingLeft: 20, paddingRight: 20 }}>Từ chối</Text>}
                                             </View>
 
                                         </View>
@@ -151,7 +173,7 @@ const styles = StyleSheet.create({
     container1: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        zIndex:1000,
+        zIndex: 1000,
     },
     container: {
         flexDirection: 'row',
@@ -162,19 +184,19 @@ const styles = StyleSheet.create({
     children: {
         borderRightColor: '#149CC6',
         borderRightWidth: 2,
-        padding:7,
+        padding: 7,
         width: sizeWidth(60),
 
     },
     children1: {
         width: sizeWidth(60.5),
-        justifyContent:'space-around',
+        justifyContent: 'space-around',
 
     },
-    children2:{
+    children2: {
         width: sizeWidth(40),
-        alignItems:'center',
-        justifyContent:'center',
+        alignItems: 'center',
+        justifyContent: 'center',
     },
     cuttoms: {
         marginTop: 5,

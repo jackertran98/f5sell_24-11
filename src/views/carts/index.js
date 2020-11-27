@@ -224,7 +224,7 @@ class Carts extends Component {
             }}
           >
             <Text style={{ fontSize: sizeFont(4), fontWeight: "bold" }}>
-              Hoa hồng
+              Hoa hồng tổng
             </Text>
             <Text style={{ fontSize: sizeFont(4), fontWeight: "bold", color: "#149CC6" }}>
               {numeral(listItem.length === 0 ? 0 : rose).format("0,0")} VNĐ
@@ -246,6 +246,7 @@ class Carts extends Component {
                   SUM: this.state.SUM,
                   NAME: "Carts",
                   NUM: this.state.count,
+                  LIST:listItem,
                 });
               }}
             >

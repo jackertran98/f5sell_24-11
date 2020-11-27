@@ -7,7 +7,8 @@ import {
   TextInput,
   Platform,
   Alert,
-  Keyboard
+  Keyboard,
+  Modal
 } from "react-native";
 import { connect } from "react-redux";
 import { Provider } from "react-native-paper";
@@ -74,6 +75,9 @@ class DetailAddressCart extends Component {
       loading: false,
       value: false,
       shipcode: false,
+      Numbercode: 'CK',
+      money: '',
+      modalVisible:false,
     };
     this.message = "";
   }
@@ -95,21 +99,6 @@ class DetailAddressCart extends Component {
     if (text == "- tất cả -") {
       this.setState({ districChild: "" });
     } else this.setState({ districChild: text });
-  };
-  handleImage = () => {
-    ImagePicker.showImagePicker(options, async (response) => {
-
-      if (response.didCancel) {
-      } else if (response.error) {
-      } else if (response.customButton) {
-      } else {
-        const source = { uri: response.uri };
-
-        this.setState({
-          loading: true,
-        });
-      }
-    });
   };
   handleNumber = (item) => {
     const { status, authUser } = this.props;
@@ -148,6 +137,30 @@ class DetailAddressCart extends Component {
 
     return resutl;
   };
+  endMoney = () => {
+    const { listItem } = this.props;
+    const { money } = this.state;
+    var sum = 0;
+    for (let i = 0; i < listItem.length; i++) {
+      sum += listItem[i].PRICE - money;
+    }
+    return numeral(sum).format(
+      "0,0"
+    );
+  }
+  endRose = () => {
+    const { money } = this.state;
+    const { listItem } = this.props;
+    var sumMoney = 0;
+    for (let i = 0; i < listItem.length; i++) {
+      sumMoney +=
+        parseFloat(listItem[i].HHMAX);
+    }
+
+    return numeral(sumMoney - money).format(
+      "0,0"
+    );
+  }
   handleBook = () => {
     const {
       phoneText,
@@ -155,6 +168,10 @@ class DetailAddressCart extends Component {
       city,
       district,
       address,
+      Numbercode,
+      districChild,
+      money,
+      note,
     } = this.state;
     const { listItem, authUser, navigation } = this.props;
     const { item } = this.props.route.params;
@@ -212,10 +229,15 @@ class DetailAddressCart extends Component {
             MONEY: result.MONEY,
             BONUS: result.BONUS,
             FULL_NAME: userName,
+            DISTCOUNT: money,
+            NOTE: note,
+            ID_PRODUCT_PROPERTIES: '',
             MOBILE_RECEIVER: phoneText,
             ID_CITY: city.MATP,
+            PAYMENT_TYPE: Numbercode,
             ID_DISTRICT: district.MAQH,
             ADDRESS: address,
+            ID_WARD: districChild.XAID,
             IDSHOP: this.props.idshop.USER_CODE,
           })
             .then((result) => {
@@ -228,7 +250,7 @@ class DetailAddressCart extends Component {
                   },
                   () => {
                     this.props.removeAllToCart();
-                    return AlertCommon("Thông báo", "Đặt hàng thành công", () => {
+                    return AlertCommon("Thông báo", `${result.data.RESULT}`, () => {
                       navigation.navigate("Order"),
                         navigation.popToTop();
                     });
@@ -241,7 +263,7 @@ class DetailAddressCart extends Component {
                     message: result.data.RESULT,
                   },
                   () => {
-                    return AlertCommon("Thông báo", "Đặt hàng thất bại", () =>
+                    return AlertCommon("Thông báo", `${result.data.RESULT}`, () =>
                       this.props.navigation.navigate("home")
                     );
                   }
@@ -266,18 +288,33 @@ class DetailAddressCart extends Component {
       note,
       showAlert,
       SUM,
+      value
     } = this.state;
-    if (
-      phoneText == "" ||
-      userName == "" ||
-      city == "" ||
-      district == "" ||
-      address == ""
-    ) {
-      return false;
+    if (value) {
+      return true;
+    } else {
+      if (
+        phoneText == "" ||
+        userName == "" ||
+        city == "" ||
+        district == "" ||
+        address == ""
+      ) {
+        return false;
+      } else {
+        return true;
+      }
     }
-    return true;
+
   };
+  shipCode = () => {
+    this.setState({
+      city: '',
+      district: '',
+      districChild: '',
+      address: '',
+    })
+  }
   handleTotlaMoney = (item) => {
     console.log("ádfsdf", item)
     var sumMoney = 0;
@@ -306,6 +343,30 @@ class DetailAddressCart extends Component {
       "0,0"
     );
   }
+  roseDetail=(item,a)=>{
+    var sumMoney1 = 0;
+    var sumMoney2 = 0;
+    if(a==1){
+      for (let i = 0; i < item.length; i++) {
+        sumMoney1 +=
+          parseFloat(item[i].PRICE)*0.01*parseFloat(item[i].COMISSION_PRODUCT);
+      }
+  
+      return numeral(sumMoney1).format(
+        "0,0"
+      );
+    }else{
+      for (let i = 0; i < item.length; i++) {
+        sumMoney2 +=
+          parseFloat(item[i].PRICE)*0.01*parseFloat(item[i].COMISSION);
+      }
+  
+      return numeral(sumMoney2).format(
+        "0,0"
+      );
+    }
+    // return sumMoney1 + sumMoney2;
+  }
   render() {
     const {
       phoneText,
@@ -317,13 +378,43 @@ class DetailAddressCart extends Component {
       districChild,
       value,
       shipcode,
+      Numbercode,
+      money,
+      modalVisible
     } = this.state;
     const { listItem } = this.props;
-    console.log("this is log", this.props.authUser)
-    console.log("this is list_item", listItem);
-    const { item } = this.props.route.params;
     return (
       <Provider>
+        <View>
+          <Modal
+            animationType="slide"
+            transparent={true}
+            visible={modalVisible}
+          >
+            <View style={styles.centeredView}>
+              <View style={styles.modalView}>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'center', marginTop: sizeHeight(7) }}>
+                    <View style={{flexDirection:'row',justifyContent:'space-between',width:sizeWidth(80)}}>
+                        <Text style={{color:'#fff'}}>Hoa hồng theo giá trị đơn hàng</Text>
+                        <Text>{this.roseDetail(listItem,1)}đ</Text>
+                    </View>
+                    <View style={{flexDirection:'row',justifyContent:'space-between',width:sizeWidth(80)}}>
+                        <Text style={{color:'#fff'}}>Hoa hồng theo mặt hàng</Text>
+                        <Text>{this.roseDetail(listItem,2)}đ</Text>
+                    </View>
+                </View>
+                <TouchableOpacity
+                  style={styles.openButton}
+                  onPress={() => {
+                    this.setState({ modalVisible: !this.state.modalVisible });
+                  }}
+                >
+                  <Text style={styles.textStyle}>X</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </Modal>
+        </View>
         <ScrollView
           keyboardShouldPersistTaps="handled"
           contentContainerStyle={{
@@ -382,7 +473,7 @@ class DetailAddressCart extends Component {
             <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-evenly', margin: 10 }}>
               <TouchableOpacity
                 style={{ flexDirection: 'row' }}
-                onPress={() => { this.setState({ value: true }) }}
+                onPress={() => { this.setState({ value: true, city: '', district: '', districChild: '', address: '' }) }}
               >
                 <View style={{ borderRadius: 50, width: 20, height: 20, borderColor: '#E1AC06', borderWidth: 1, justifyContent: 'center', alignItems: 'center' }}>
                   <Text style={{ backgroundColor: `${value ? '#E1AC06' : 'white'}`, borderRadius: 50, width: 12, height: 12 }}></Text>
@@ -586,7 +677,7 @@ class DetailAddressCart extends Component {
               </Text>
             </View>
             <View style={styles.viewMoney}>
-              <Text style={styles.textTitle}>Hoa hồng:</Text>
+              <Text style={styles.textTitle}>Hoa hồng tổng: <Text style={{ color: '#149CC6' }} onPress={() => { this.setState({ modalVisible: true }) }}>Chi tiết</Text></Text>
               <Text
                 style={[
                   styles.textMoney,
@@ -606,15 +697,22 @@ class DetailAddressCart extends Component {
               <View style={{ marginTop: 10 }}>
                 <View style={{ alignItems: 'center' }}>
                   <TextInput
-                    style={{ borderColor: '#DDD', borderWidth: 1, width: sizeWidth(90) }}
+                    style={{ borderColor: '#DDD', borderWidth: 1, width: sizeWidth(90), paddingLeft: 10 }}
+                    onChangeText={(text) => this.setState({ money: text })}
                     placeholder="Số tiền muốn giảm giá"
                   />
-                  <Text style={{ width: sizeWidth(90), fontStyle: 'italic', }}>CTV có thể nhập giảm giá với số tiền không quá số hoa hồng tổng ({this.roseMoney(listItem)}đ) của chính đơn hàng</Text>
+                  <Text style={{ width: sizeWidth(90), fontStyle: 'italic', marginTop: 5, marginBottom: 5 }}>CTV có thể nhập giảm giá với số tiền không quá số hoa hồng tổng ({this.roseMoney(listItem)}đ) của chính đơn hàng</Text>
                 </View>
-                <View style={{marginLeft:sizeWidth(5)}}>
-                  <Text style={{marginTop:5}}><Text style={{fontWeight:'bold'}}>Tổng tiền</Text> { }</Text>
-                  <Text style={{marginTop:5}}><Text style={{fontWeight:'bold'}}>Hoa hồng sau khi giảm trừ</Text> { }</Text>
-                  <Text style={{fontStyle: 'italic'}}>(Hoa hồng được cộng sau khi hoàn thành đơn hàng)</Text>
+                <View style={{ margin: sizeWidth(5), }}>
+                  <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                    <Text><Text style={{ fontWeight: 'bold' }}>Tổng tiền</Text> { }</Text>
+                    <Text style={{ color: COLOR.BUTTON, fontWeight: 'bold' }}>{this.endMoney()}</Text>
+                  </View>
+                  <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                    <Text><Text style={{ fontWeight: 'bold' }}>Hoa hồng sau khi giảm trừ</Text> { }</Text>
+                    <Text style={{ color: "#149CC6", fontWeight: 'bold' }}>{this.endRose()}</Text>
+                  </View>
+                  <Text style={{ fontStyle: 'italic' }}>(Hoa hồng được cộng sau khi hoàn thành đơn hàng)</Text>
                 </View>
               </View>
             </View>
@@ -632,7 +730,7 @@ class DetailAddressCart extends Component {
               <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-evenly', margin: 10 }}>
                 <TouchableOpacity
                   style={{ flexDirection: 'row' }}
-                  onPress={() => { this.setState({ shipcode: true }) }}
+                  onPress={() => { this.setState({ shipcode: true, Numbercode: 'COD' }) }}
                 >
                   <View style={{ borderRadius: 50, width: 20, height: 20, borderColor: '#E1AC06', borderWidth: 1, justifyContent: 'center', alignItems: 'center' }}>
                     <Text style={{ backgroundColor: `${shipcode ? '#E1AC06' : 'white'}`, borderRadius: 50, width: 12, height: 12 }}></Text>
@@ -641,7 +739,7 @@ class DetailAddressCart extends Component {
                 </TouchableOpacity>
 
                 <TouchableOpacity style={{ flexDirection: 'row' }}
-                  onPress={() => { this.setState({ shipcode: false }) }}
+                  onPress={() => { this.setState({ shipcode: false, Numbercode: 'CK' }) }}
                 >
                   <View style={{ borderRadius: 50, width: 20, height: 20, borderColor: '#E1AC06', borderWidth: 1, justifyContent: 'center', alignItems: 'center' }}>
                     <Text style={{ backgroundColor: `${shipcode ? 'white' : '#E1AC06'}`, borderRadius: 50, width: 12, height: 12 }}></Text>
@@ -653,6 +751,7 @@ class DetailAddressCart extends Component {
                 <TextInput
                   style={{ borderColor: '#DDD', borderWidth: 1, width: sizeWidth(90) }}
                   placeholder="Ghi chú cho shop"
+                  onChangeText={(text) => this.setState({ note: text })}
                 />
               </View>
             </View>

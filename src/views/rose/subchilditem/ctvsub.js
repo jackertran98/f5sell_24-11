@@ -139,7 +139,8 @@ class ctvsub extends Component {
             IDSHOP: this.props.idshop.USER_CODE,
         })
             .then((res) => {
-                if (res.data.ERROR == "0000" && this.props.authUser.GROUPS == 5) {
+                console.log("aaaaaaaaaaaaaaaaaaaaa",res)
+                if (res.data.ERROR == "0000") {
                     this.setState({
                         Data: res.data.INFO
                     })
@@ -156,12 +157,15 @@ class ctvsub extends Component {
     render() {
         const { status, username } = this.props;
         const { date1, date2, Data, momney, loading } = this.state;
+        console.log("this is data_user",Data);
         return (
             <ScrollView nestedScrollEnabled={true}>
                 <View style={{ height: sizeHeight(13), width: '100%' }}>
-                    <Text style={{ height: sizeHeight(4.5), borderRadius: 5, backgroundColor: 'black', color: 'white', textAlign: 'center', paddingTop: 8, fontSize: 16, marginTop: 10 }}>
+                    <View style={{height: sizeHeight(4.5), borderRadius: 5, backgroundColor: 'black', fontSize: 16,justifyContent:'center',alignItems:'center',marginTop:10}}>
+                    <Text style={{ color:'#fff' }}>
                         Số dư hoa hồng hiện tại
                      </Text>
+                    </View>
                     <View style={{ flex: 1, flexDirection: 'row' }}>
                         <View style={{ flex: 1, flexDirection: 'row', paddingLeft: 10, alignItems: 'center' }}>
                             <Image
@@ -192,7 +196,7 @@ class ctvsub extends Component {
                         <TouchableOpacity
                             onPress={this.showDatePicker1}
                         >
-                            <Text style={{ fontSize: 12 }}>Từ ngày</Text>
+                            <Text style={{ fontSize: 12 }}>Bắt đầu</Text>
                             <Text style={{ fontSize: 12 }}>{this.state.startTime}</Text>
                         </TouchableOpacity>
 
@@ -214,7 +218,7 @@ class ctvsub extends Component {
                         <TouchableOpacity
                             onPress={this.showDatePicker2}
                         >
-                            <Text style={{ fontSize: 12 }}>Đến</Text>
+                            <Text style={{ fontSize: 12 }}>Kết thúc</Text>
                             <Text style={{ fontSize: 12 }}>{this.state.endTime}</Text>
                         </TouchableOpacity>
                         <DateTimePickerModal
@@ -272,7 +276,7 @@ class ctvsub extends Component {
                                 textAlign: "center",
                                 backgroundColor: '#149CC6',
                                 padding: 7,
-                                borderRadius: 10,
+                                borderRadius: 5,
                             }}
                         >
                             Tìm kiếm
@@ -401,12 +405,13 @@ const styles = StyleSheet.create({
         width: sizeWidth(30),
     },
     confix: {
-        height: sizeHeight(5),
+        width: sizeWidth(30),
         borderColor: '#E1AC06',
         paddingLeft: 10,
         paddingRight: 10,
-        borderWidth: 1,
-        borderRadius: 15,
+        borderWidth: 2,
+        borderRadius: 5,
+        height: sizeHeight(5),
 
     },
 

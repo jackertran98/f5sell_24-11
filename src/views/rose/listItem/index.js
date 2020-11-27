@@ -70,6 +70,7 @@ class ListProducts extends PureComponent {
       NUMOFPAGE: 100,
       IDSHOP: this.props.idshop.USER_CODE
     }).then((res) => {
+      console.log("this is GetwithdrawalCTV",res);
       this.setState({
         data_tt: res.data.INFO
       })
@@ -90,6 +91,7 @@ class ListProducts extends PureComponent {
       username,
     } = this.props;
     const { ListData, data_tt, loading, onChangeText } = this.state;
+    console.log("data_tt",data_tt)
     return (
       <ScrollView>
         

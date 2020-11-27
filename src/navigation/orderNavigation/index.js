@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import { createStackNavigator,CardStyleInterpolators } from "@react-navigation/stack";
-import { TouchableOpacity, StyleSheet, TextInput, Image, View,Easing,Platform,Text } from "react-native";
+import { createStackNavigator, CardStyleInterpolators } from "@react-navigation/stack";
+import { TouchableOpacity, StyleSheet, TextInput, Image, View, Easing, Platform, Text } from "react-native";
 import Order from "../../views/ordermain";
 import { COLOR } from "../../utils/color/colors";
 import DetailOrder from "../../views/ordermain/detailorder";
+import DetailNotifi from "../../views/notification/listNotification/DetailNotifi"
 import {
   sizeFont,
   sizeWidth,
@@ -66,7 +67,7 @@ MyHomeStack = (props) => {
           title: "Đơn hàng",
           headerStyle: {
             backgroundColor: COLOR.HEADER,
-            height:Platform.OS=='ios'?sizeHeight(12):sizeHeight(9),
+            height: Platform.OS == 'ios' ? sizeHeight(12) : sizeHeight(9),
           },
           headerTitleAlign: "center",
           headerTitleStyle: {
@@ -117,17 +118,18 @@ MyHomeStack = (props) => {
                   color="#fff"
                 />
                 <View style={styles.viewList}>
-                {countNotify<100?<Text
-                      style={{
-                        color: "#fff",
-                        textAlign: "center",
-                        fontSize: sizeFont(3),
-                      }}
-                    >
-                      {countNotify}
-                    </Text>:<Text style={{fontSize: sizeFont(2),color: "#fff",
-                        }}>99+</Text>}
-                  </View>
+                  {countNotify < 100 ? <Text
+                    style={{
+                      color: "#fff",
+                      textAlign: "center",
+                      fontSize: sizeFont(3),
+                    }}
+                  >
+                    {countNotify}
+                  </Text> : <Text style={{
+                    fontSize: sizeFont(2), color: "#fff",
+                  }}>99+</Text>}
+                </View>
               </View>
             );
           },
@@ -142,7 +144,23 @@ MyHomeStack = (props) => {
             backgroundColor: COLOR.HEADER,
             height: sizeHeight(10),
           },
-          headerTitleAlign:"center",
+          headerTitleAlign: "center",
+          headerTitleStyle: {
+            color: 'white',
+          },
+          headerTintColor: '#fff'
+        })}
+      />
+      <HomeStack.Screen
+        name="DetailNotifi"
+        component={DetailNotifi}
+        options={({ route }) => ({
+          title: "Chi tiết thông báo",
+          headerStyle: {
+            backgroundColor: COLOR.HEADER,
+            height: sizeHeight(10),
+          },
+          headerTitleAlign: "center",
           headerTitleStyle: {
             color: 'white',
           },

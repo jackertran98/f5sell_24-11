@@ -50,12 +50,12 @@ class StartTwo extends Component {
         }
     }
     componentDidMount(){
-        this.handload();
+      
     }
     render() {
         return (
             <View>
-                {this.state.con?<ImageBackground
+                <ImageBackground
                 source={require('../../../../assets/images/stacktwo.png')}
                 style={styles.container}
             >
@@ -103,7 +103,7 @@ class StartTwo extends Component {
                     onChangeText={(text) => this.setState({ startThu: text })}
                 />
 
-            </ImageBackground>:null}
+            </ImageBackground>
             </View>
         )
     }

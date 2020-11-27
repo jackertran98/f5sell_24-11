@@ -93,8 +93,6 @@ class UserOrder extends Component {
             this.setState({
                 startTime: moment(date).format("DD/MM/YYYY")
             })
-
-            
         }
         this.hideDatePicker1();
     };
@@ -126,14 +124,14 @@ class UserOrder extends Component {
         console.log(d2);
         if (d2 < d0) {
             Alert.alert("Thông báo", "Thời gian không hợp lệ, mời nhập lại")
-        }else if(d2-d0<5184000){
+        } else if (d2 - d0 < 5184000) {
             Alert.alert("Thông báo", "Thời gian không được quá 60 ngày, mời nhập lại")
         }
         else {
             this.setState({
                 endTime: moment(date).format("DD/MM/YYYY")
             })
-            
+
         }
         this.hideDatePicker2();
 
@@ -146,11 +144,12 @@ class UserOrder extends Component {
             END_TIME: this.state.endTime,
             STATUS: '',
             PAGE: 1,
-            NUMOFPAGE: 50,
+            NUMOFPAGE: 100,
             IDSHOP: this.props.idshop.USER_CODE,
         })
             .then((res) => {
-                if (res.data.ERROR == "0000" && this.props.authUser.GROUPS == 5) {
+                console.log("aaaaaaaaaa",res);
+                if (res.data.ERROR == "0000") {
                     this.setState({
                         Data: res.data.INFO,
                         refreshing: false
@@ -175,21 +174,35 @@ class UserOrder extends Component {
         this.handleLoad();
     }
     checkColor = (a) => {
-        if (a == 'Đã tiếp nhận') {
-            return <Text style={{ backgroundColor: '#E1AC06', padding: 4, color: '#FFFFFF', paddingLeft: 15, paddingRight: 15 }}>Đã tiếp nhận</Text>
-        } else if (a == 'Đã hủy') {
-            return <Text style={{ backgroundColor: '#FF0000', padding: 4, color: '#FFFFFF', paddingLeft: 35, paddingRight: 35 }}>Đã hủy</Text>
-        } else if (a == 'Đang xử lý') {
-            return <Text style={{ backgroundColor: '#149CC6', padding: 4, color: '#FFFFFF', paddingLeft: 23, paddingRight: 23 }}>Đang xử lý</Text>
+        if (a.STATUS == 1) {
+            return <View style={{ backgroundColor: '#E1AC06', width: sizeWidth(30), height: sizeHeight(4), justifyContent: 'center', alignItems: 'center' }}>
+                <Text style={{ color: '#FFFFFF', }}>{a.STATUS_NAME}</Text>
+            </View>
+        } else if (a.STATUS == 2) {
+            return <View style={{ backgroundColor: '#149CC6', width: sizeWidth(30), height: sizeHeight(4), justifyContent: 'center', alignItems: 'center' }}>
+                <Text style={{ color: '#FFFFFF', }}>{a.STATUS_NAME}</Text>
+            </View>
 
-        } else if (a == 'Đang chuyển') {
-            return <Text style={{ backgroundColor: '#149CC6', padding: 4, color: '#FFFFFF', paddingLeft: 15, paddingRight: 15 }}>Đang chuyển</Text>
+        } else if (a.STATUS == 3) {
+            return <View style={{ backgroundColor: '#149CC6', width: sizeWidth(30), height: sizeHeight(4), justifyContent: 'center', alignItems: 'center' }}>
+                <Text style={{ color: '#FFFFFF', }}>{a.STATUS_NAME}</Text>
+            </View>
+
+        } else if (a.STATUS == 4) {
+            return <View style={{ backgroundColor: '#FF0000', width: sizeWidth(30), height: sizeHeight(4), justifyContent: 'center', alignItems: 'center' }}>
+                <Text style={{ color: '#FFFFFF', }}>{a.STATUS_NAME}</Text>
+            </View>
+
         } else {
-            return <Text style={{ backgroundColor: '#279907', padding: 4, color: '#FFFFFF', paddingLeft: 15, paddingRight: 15 }}>Hoàn thành</Text>
+            return <View style={{ backgroundColor: '#279907', width: sizeWidth(30), height: sizeHeight(4), justifyContent: 'center', alignItems: 'center' }}>
+                <Text style={{ color: '#FFFFFF', }}>{a.STATUS_NAME}</Text>
+            </View>
+
         }
     }
     render() {
         const { selectedValue, Data, loading, refreshing } = this.state;
+        console.log("list data", Data);
 
         return (
             <View style={{ marginBottom: sizeHeight(30) }}>
@@ -305,7 +318,7 @@ class UserOrder extends Component {
                                         IDSHOP: this.props.idshop.USER_CODE,
                                     })
                                         .then((res) => {
-                                            console.log("khong có dữ liệu",res);
+                                            console.log("khong có dữ liệu", res);
                                             if (res.data.ERROR == "0000") {
                                                 this.setState({
                                                     Data: res.data.INFO,
@@ -363,7 +376,7 @@ class UserOrder extends Component {
                                             </Text>
                                         </View>
                                         <View>
-                                            {this.checkColor(Val.STATUS_NAME)}
+                                            {this.checkColor(Val)}
                                         </View>
                                     </View>
                                     <View style={{ flexDirection: 'row' }}>

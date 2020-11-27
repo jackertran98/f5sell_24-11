@@ -140,7 +140,6 @@ class UserChildren extends Component {
                 WARD_NAME: ''
             })
                 .then((res) => {
-                    console.log("híishi", res)
                     this.setState({ loading: false })
                     Alert.alert("Thông báo", `${res.data.RESULT}`)
                 })
@@ -232,113 +231,7 @@ class UserChildren extends Component {
             }
         });
     };
-    updateAccount = () => {
-        const {
-            userCode,
-            usernam,
-            status,
-            fullName,
-            lavelStore,
-            phone,
-            email,
-            dateOfBirth,
-            gender,
-            city,
-            district,
-            ward,
-            address,
-            stk,
-            tennh,
-            tentk,
-            password,
-            imageAvatar,
-            CMT_1,
-            CMT_2,
-            cmnd,
-            districChild,
-            showAlert,
-        } = this.state;
-        const { authUser } = this.props;
-
-        UpdateInforAccount({
-            USERNAME: authUser.USERNAME,
-            USER_CTV: authUser.USERNAME,
-            NAME: usernam,
-            DOB: '',
-            GENDER: gender,
-            EMAIL: email,
-            CITY_NAME: city.NAME,
-            DISTRICT_NAME: district.NAME,
-            ADDRESS: address,
-            STK: stk,
-            TENTK: tentk,
-            TENNH: tennh,
-            AVATAR: '',
-            IDSHOP: this.props.idshop.USER_CODE,
-            CMT: cmnd,
-            IMG1: CMT_1,
-            IMG2: CMT_2,
-            WARD_NAME: '',
-        })
-            .then((result) => {
-                console.log("update", result)
-                // if (result.data.ERROR === "0000") {
-                //   this.setState(
-                //     {
-                //       loading: false,
-                //     },
-                //     () => {
-                //       this.message = setTimeout(
-                //         () =>
-                //           Alert("Thông báo", `${result.data.RESULT}`) 
-                //         //   () =>
-                //         //     this.props.navigation.navigate("MangeAgent")
-
-                //       );
-                //     }
-                //   );
-                // } else {
-                //   this.setState(
-                //     {
-                //       loading: false,
-                //     },
-                //     () => {
-                //       this.message = setTimeout(
-                //         () =>
-                //         Alert.alert("Thông báo", `${result.data.RESULT}`)
-
-                //       );
-                //     }
-                //   );
-                // }
-            })
-            .catch((error) => {
-                this.setState({ loading: false });
-            });
-    };
     componentDidMount() {
-        GetListCTV({
-            USERNAME: this.props.username,
-            SEARCH: '',
-            ID_CITY: '',
-            I_PAGE: 1,
-            NUMOFPAGE: 25,
-            IDSHOP: this.props.idshop.USER_CODE,
-        })
-            .then((res) => {
-                console.log("this is GetListCTV", res)
-                if (res.data.ERROR == "0000") {
-                    this.setState({
-                        data: res.data.INFO
-                    })
-                } else {
-                    this.showToast(res);
-                }
-            })
-            .catch((err) => {
-                this.setState({ data: [] })
-                alert('Không có dữ liệu')
-            });
         Getwithdrawal({
             USERNAME: this.props.username,
             USER_CTV: this.props.username,
@@ -366,268 +259,269 @@ class UserChildren extends Component {
             city, passold, passnew, phone, address, district, districChild, loading, dateOfBirth } = this.state;
         console.log("authUser", this.props.authUser);
         console.log("idshop", this.props.idshop);
+        const { authUser } = this.props;
 
         return (
-            <View>
-                {!loading ? <View>
-                    {data.map((Val, key) => {
-                        return (
-                            <ScrollView>
-                                <View style={{ backgroundColor: '#28990D', height: sizeHeight(15), flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around' }}>
-                                    <View>
-                                        <Text style={{ color: 'white', fontSize: 16, fontWeight: 'bold' }}>{Val.FULL_NAME}</Text>
-                                        <Text style={{ color: 'white' }}>Mã user: {Val.USER_CODE}</Text>
-                                    </View>
-                                    <View>
-                                        <TouchableOpacity
-                                            onPress={() => this.handleImage(1)}
-                                        >
-                                            <View style={{
-                                                width: 80, height: 80, borderRadius: 50,
-                                                justifyContent: 'center', alignItems: 'center',
-                                            }}>
-                                                <Image
-                                                    source={imageAvatar === '' ? require('../../../assets/images/camera.png') : { uri: imageAvatar }}
-                                                    style={{ width: 65, height: 65, borderRadius: 50, backgroundColor: 'white' }}
-                                                />
-                                            </View>
-                                        </TouchableOpacity>
-                                    </View>
-                                </View>
-                                <View>
-                                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingBottom: 20 }}>
-                                        <View style={{
-                                            justifyContent: 'center', alignContent: 'center', backgroundColor: '#E1AC06',
-                                            width: sizeWidth(100)
-                                        }}>
-                                            <Text style={{ fontSize: 16, padding: 10, color: 'white', fontWeight: 'bold' }}>Thông tin cá nhân</Text>
-                                        </View>
-                                    </View>
-                                    <View>
-                                        <View style={styles.content}>
-                                            <Text>Họ và tên:</Text>
-                                            <TextInput
-                                                value={usernam}
-                                                onChangeText={(text) => { this.setState({ usernam: text }) }}
-                                            />
-                                        </View>
 
-                                        <View style={styles.content}>
-                                            <Text>Giới tính:</Text>
-                                            <Text>{Val.GENDERNAME}</Text>
-                                        </View>
-                                        <View style={styles.content}>
-                                            <Text>Email:</Text>
-                                            <TextInput
-                                                value={email}
-                                                onChangeText={(text) => { this.setState({ email: text }) }}
-                                            />
-                                        </View>
-                                        {/* <View style={styles.content}>
+            <View>
+
+                <ScrollView>
+                    <View style={{ backgroundColor: '#28990D', height: sizeHeight(15), flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around' }}>
+                        <View>
+                            <Text style={{ color: 'white', fontSize: 16, fontWeight: 'bold' }}>{usernam}</Text>
+                            <Text style={{ color: 'white' }}>Mã user: {authUser.USER_CODE}</Text>
+                        </View>
+                        <View>
+                            <TouchableOpacity
+                                onPress={() => this.handleImage(1)}
+                            >
+                                <View style={{
+                                    width: 80, height: 80, borderRadius: 50,
+                                    justifyContent: 'center', alignItems: 'center',
+                                }}>
+                                    <Image
+                                        source={imageAvatar === '' ? require('../../../assets/images/camera.png') : { uri: imageAvatar }}
+                                        style={{ width: 65, height: 65, borderRadius: 50, backgroundColor: 'white' }}
+                                    />
+                                </View>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                    <View>
+                        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingBottom: 20 }}>
+                            <View style={{
+                                justifyContent: 'center', alignContent: 'center', backgroundColor: '#E1AC06',
+                                width: sizeWidth(100)
+                            }}>
+                                <Text style={{ fontSize: 16, padding: 10, color: 'white', fontWeight: 'bold' }}>Thông tin cá nhân</Text>
+                            </View>
+                        </View>
+                        <View>
+                            <View style={styles.content}>
+                                <Text>Họ và tên:</Text>
+                                <TextInput
+                                    value={usernam}
+                                    onChangeText={(text) => { this.setState({ usernam: text }) }}
+                                />
+                            </View>
+
+                            <View style={styles.content}>
+                                <Text>Giới tính:</Text>
+                                <Text>{authUser.GENDER}</Text>
+                            </View>
+                            <View style={styles.content}>
+                                <Text>Email:</Text>
+                                <TextInput
+                                    value={email}
+                                    onChangeText={(text) => { this.setState({ email: text }) }}
+                                />
+                            </View>
+                            {/* <View style={styles.content}>
                                         <Text>Số điện thoại:</Text>
                                         <Text>{Val.ADDRESS}</Text>
                                     </View> */}
-                                        <View style={styles.content}>
-                                            <Text>Ngày sinh:</Text>
-                                            <TextInput
-                                                value={dateOfBirth}
-                                                onChangeText={(text) => { this.setState({ dateOfBirth: text }) }}
-                                            />
-                                        </View>
-                                        <View style={styles.content}>
+                            <View style={styles.content}>
+                                <Text>Ngày sinh:</Text>
+                                <TextInput
+                                    value={dateOfBirth}
+                                    onChangeText={(text) => { this.setState({ dateOfBirth: text }) }}
+                                />
+                            </View>
+                            <View style={styles.content}>
 
-                                            <Text>Tỉnh/ thành phố</Text>
-                                            <TouchableOpacity
-                                                onPress={() => {
-                                                    this.props.navigation.navigate("ListCountries", {
-                                                        onSetCity: this.changeCity,
-                                                        NAME: "Thông tin CTV",
-                                                    });
-                                                }}
-                                                style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}
-                                            >
-                                                <Text style={{marginRight:10}}>{city.NAME == undefined ? "" : city.NAME}</Text>
-                                                <IconComponets
-                                                    name="chevron-down"
-                                                    size={sizeFont(5)}
-                                                    color="#E1AC06"
-                                                />
-                                            </TouchableOpacity>
-                                        </View>
-                                        <View style={styles.content}>
-                                            <Text>Quận/Huyện:</Text>
-                                            <TouchableOpacity
-                                                onPress={() => {
-                                                    this.props.navigation.navigate("ListDistrict", {
-                                                        onSetDistrict: this.changeDistrict,
-                                                        GHN_TINHID: city.MATP,
-                                                        NAME: "Thông tin CTV",
-                                                    });
-                                                }}
-                                                style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}
-                                            >
-                                                <Text style={{marginRight:10}}>{district.NAME == undefined ? "" : district.NAME}</Text>
-                                                <IconComponets
-                                                    name="chevron-down"
-                                                    size={sizeFont(5)}
-                                                    color="#E1AC06"
-                                                />
-                                            </TouchableOpacity>
-                                        </View>
-                                        <View style={styles.content}>
-                                            <Text>Phường/ Xã:</Text>
-                                            <TouchableOpacity
-                                                onPress={() => {
-                                                    this.props.navigation.navigate("ListDistrictChild", {
-                                                        onSetDistrictChild: this.changeDistrictChild,
-                                                        GHN_TINHID: district.MAQH,
-                                                        NAME: "Thông tin CTV",
-                                                    });
-                                                }}
-                                                style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}
-                                            >
-                                                <Text style={{marginRight:10}}>{districChild.NAME == undefined ? "" : districChild.NAME}</Text>
-                                                <IconComponets
-                                                    name="chevron-down"
-                                                    size={sizeFont(5)}
-                                                    color="#E1AC06"
-                                                />
-                                            </TouchableOpacity>
-                                        </View>
-                                        <View style={styles.content}>
-                                            <Text>Địa chỉ:</Text>
-                                            <TextInput
-                                                value={address}
-                                                onChangeText={(text) => { this.setState({ address: text }) }}
-                                            />
-                                        </View>
-                                        <View style={styles.content}>
-                                            <Text>Số cmnd:</Text>
-                                            <TextInput
-                                                value={cmnd}
-                                                onChangeText={(text) => { this.setState({ cmnd: text }) }}
-                                            />
-                                        </View>
-                                        <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', marginTop: 15, marginBottom: 15 }}>
-                                            <View style={{ alignItems: 'center' }}>
-                                                <TouchableOpacity
-                                                    style={{ width: sizeWidth(40), height: sizeHeight(15), borderColor: "#E1AC06", borderWidth: 2, borderRadius: 10, justifyContent: 'center', alignItems: 'center' }}
-                                                    onPress={() => { this.handleImage(2) }}
-                                                >
-                                                    <Image
-                                                        source={CMT_1 == null ? require('../../../assets/images/update.png') : { uri: CMT_1 }}
-                                                        style={{ width: 120, height: 80 }}
-                                                    />
-
-                                                </TouchableOpacity>
-                                                <Text style={{ marginTop: 5 }}>Ảnh mặt trước cmnd</Text>
-                                            </View>
-                                            <View style={{ alignItems: 'center' }}>
-                                                <TouchableOpacity
-                                                    style={{ width: sizeWidth(40), height: sizeHeight(15), borderColor: "#E1AC06", borderWidth: 2, borderRadius: 10, justifyContent: 'center', alignItems: 'center' }}
-                                                    onPress={() => { this.handleImage(3) }}
-                                                >
-                                                    <Image
-                                                        source={CMT_2 == null ? require('../../../assets/images/update.png') : { uri: CMT_2 }}
-                                                        style={{ width: 120, height: 80 }}
-                                                    />
-
-                                                </TouchableOpacity>
-                                                <Text style={{ marginTop: 5 }}>Ảnh mặt sau cmnd</Text>
-                                            </View>
-                                        </View>
-                                    </View>
-                                </View>
-                                <View>
-                                    <View>
-                                        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingBottom: 20 }}>
-                                            <View style={{ width: sizeWidth(100), backgroundColor: '#E1AC06' }}>
-                                                <Text style={{ fontSize: 16, padding: 10, fontWeight: 'bold', color: 'white' }}>Tài khoản ngân hàng</Text>
-                                            </View>
-
-                                        </View>
-                                    </View>
-                                    <View>
-                                        <View style={styles.content}>
-                                            <Text>Số tài khoản:</Text>
-                                            <TextInput
-                                                value={stk}
-                                                onChangeText={(text) => { this.setState({ stk: text }) }}
-                                            />
-                                        </View>
-
-                                        <View style={styles.content}>
-                                            <Text>Tên tài khoản:</Text>
-                                            <TextInput
-                                                value={tentk}
-                                                onChangeText={(text) => { this.setState({ tentk: text }) }}
-                                            />
-                                        </View>
-                                        <View style={styles.content}>
-                                            <Text>Ngân hàng, chi nhánh:</Text>
-                                            <TextInput
-                                                value={tennh}
-                                                onChangeText={(text) => { this.setState({ tennh: text }) }}
-                                            />
-                                        </View>
-                                    </View>
-                                    <View style={{ height: 4.5, backgroundColor: '#AAAAAA' }}></View>
-                                </View>
-                                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around', borderBottomColor: '#AAAAAA', borderBottomWidth: 4.5, height: 60 }}>
-                                    <Image
-                                        source={require('../../../assets/images/monney.png')}
-                                        style={{ width: 50, height: 50 }}
+                                <Text>Tỉnh/ thành phố</Text>
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        this.props.navigation.navigate("ListCountries", {
+                                            onSetCity: this.changeCity,
+                                            NAME: "Thông tin CTV",
+                                        });
+                                    }}
+                                    style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}
+                                >
+                                    <Text style={{ marginRight: 10 }}>{city.NAME == undefined ? "" : city.NAME}</Text>
+                                    <IconComponets
+                                        name="chevron-down"
+                                        size={sizeFont(5)}
+                                        color="#E1AC06"
                                     />
-                                    <Text style={{ fontSize: 16 }}>Số dư hoa hồng hiện tại <Text style={{ color: '#FF5C03', fontSize: 20, fontWeight: 'bold' }}>
-                                        {Rose.length === 0 ? 0 : numeral(Rose[0].BALANCE).format("0,0")}đ
-                                    </Text></Text>
+                                </TouchableOpacity>
+                            </View>
+                            <View style={styles.content}>
+                                <Text>Quận/Huyện:</Text>
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        this.props.navigation.navigate("ListDistrict", {
+                                            onSetDistrict: this.changeDistrict,
+                                            GHN_TINHID: city.MATP,
+                                            NAME: "Thông tin CTV",
+                                        });
+                                    }}
+                                    style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}
+                                >
+                                    <Text style={{ marginRight: 10 }}>{district.NAME == undefined ? "" : district.NAME}</Text>
+                                    <IconComponets
+                                        name="chevron-down"
+                                        size={sizeFont(5)}
+                                        color="#E1AC06"
+                                    />
+                                </TouchableOpacity>
+                            </View>
+                            <View style={styles.content}>
+                                <Text>Phường/ Xã:</Text>
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        this.props.navigation.navigate("ListDistrictChild", {
+                                            onSetDistrictChild: this.changeDistrictChild,
+                                            GHN_TINHID: district.MAQH,
+                                            NAME: "Thông tin CTV",
+                                        });
+                                    }}
+                                    style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}
+                                >
+                                    <Text style={{ marginRight: 10 }}>{districChild.NAME == undefined ? "" : districChild.NAME}</Text>
+                                    <IconComponets
+                                        name="chevron-down"
+                                        size={sizeFont(5)}
+                                        color="#E1AC06"
+                                    />
+                                </TouchableOpacity>
+                            </View>
+                            <View style={styles.content}>
+                                <Text>Địa chỉ:</Text>
+                                <TextInput
+                                    value={address}
+                                    onChangeText={(text) => { this.setState({ address: text }) }}
+                                />
+                            </View>
+                            <View style={styles.content}>
+                                <Text>Số cmnd:</Text>
+                                <TextInput
+                                    value={cmnd}
+                                    onChangeText={(text) => { this.setState({ cmnd: text }) }}
+                                />
+                            </View>
+                            <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', marginTop: 15, marginBottom: 15 }}>
+                                <View style={{ alignItems: 'center' }}>
                                     <TouchableOpacity
-                                        onPress={() => {
-                                            this.props.navigation.navigate('detailrose')
-                                        }}
+                                        style={{ width: sizeWidth(40), height: sizeHeight(15), borderColor: "#E1AC06", borderWidth: 2, borderRadius: 10, justifyContent: 'center', alignItems: 'center' }}
+                                        onPress={() => { this.handleImage(2) }}
                                     >
                                         <Image
-                                            source={require('../../../assets/images/right.png')}
-                                            style={{ width: 18, height: 18 }}
+                                            source={CMT_1 == null ? require('../../../assets/images/update.png') : { uri: CMT_1 }}
+                                            style={{ width: 120, height: 80 }}
                                         />
-                                    </TouchableOpacity>
-                                </View>
-                                <View>
-                                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingBottom: 20 }}>
-                                        <View style={{ width: sizeWidth(100), backgroundColor: '#E1AC06' }}>
-                                            <Text style={{ fontSize: 16, padding: 10, fontWeight: 'bold', color: 'white' }}>Tài khoản ngân hàng</Text>
-                                        </View>
-                                    </View>
-                                    <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-                                        <Text style={{ padding: 10, fontSize: sizeFont(4.5) }}>Để nâng cấp thành tài khoản CTV bạn cần nhập vào mã giới thiệu</Text>
-                                        <TextInput
-                                            placeholder="- Mã giới thiệu"
-                                            style={{ width: sizeWidth(60), height: sizeHeight(6), borderColor: '#E1AC06', borderWidth: 2 }}
 
-                                        />
-                                    </View>
+                                    </TouchableOpacity>
+                                    <Text style={{ marginTop: 5 }}>Ảnh mặt trước cmnd</Text>
                                 </View>
-                                <View style={{ justifyContent: 'center', alignItems: 'center', paddingBottom: 20 }}>
+                                <View style={{ alignItems: 'center' }}>
                                     <TouchableOpacity
-                                        style={{
-                                            flexDirection: 'row', alignItems: 'center', backgroundColor: '#149CC6',
-                                            width: sizeWidth(40), justifyContent: 'center', marginTop: 20
-                                        }}
+                                        style={{ width: sizeWidth(40), height: sizeHeight(15), borderColor: "#E1AC06", borderWidth: 2, borderRadius: 10, justifyContent: 'center', alignItems: 'center' }}
+                                        onPress={() => { this.handleImage(3) }}
+                                    >
+                                        <Image
+                                            source={CMT_2 == null ? require('../../../assets/images/update.png') : { uri: CMT_2 }}
+                                            style={{ width: 120, height: 80 }}
+                                        />
 
-
-                                        onPress={() =>
-                                            this.update()
-                                        }>
-                                        <Text style={{ padding: 10 }}>Cập nhật</Text>
                                     </TouchableOpacity>
+                                    <Text style={{ marginTop: 5 }}>Ảnh mặt sau cmnd</Text>
                                 </View>
-                            </ScrollView>
+                            </View>
+                        </View>
+                    </View>
+                    <View>
+                        <View>
+                            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingBottom: 20 }}>
+                                <View style={{ width: sizeWidth(100), backgroundColor: '#E1AC06' }}>
+                                    <Text style={{ fontSize: 16, padding: 10, fontWeight: 'bold', color: 'white' }}>Tài khoản ngân hàng</Text>
+                                </View>
+
+                            </View>
+                        </View>
+                        <View>
+                            <View style={styles.content}>
+                                <Text>Số tài khoản:</Text>
+                                <TextInput
+                                    value={stk}
+                                    onChangeText={(text) => { this.setState({ stk: text }) }}
+                                />
+                            </View>
+
+                            <View style={styles.content}>
+                                <Text>Tên tài khoản:</Text>
+                                <TextInput
+                                    value={tentk}
+                                    onChangeText={(text) => { this.setState({ tentk: text }) }}
+                                />
+                            </View>
+                            <View style={styles.content1}>
+                                <Text>Ngân hàng, chi nhánh:</Text>
+                                <TextInput
+                                    value={tennh}
+                                    onChangeText={(text) => { this.setState({ tennh: text }) }}
+                                />
+                            </View>
+                        </View>
+                        <View style={{ height: 4, backgroundColor: '#AAAAAA' }}></View>
+                    </View>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around', height: 60 }}>
+                        <Image
+                            source={require('../../../assets/images/monney.png')}
+                            style={{ width: 50, height: 50 }}
+                        />
+                        <Text style={{ fontSize: 16 }}>Số dư hoa hồng hiện tại <Text style={{ color: '#FF5C03', fontSize: 20, fontWeight: 'bold' }}>
+                            {Rose.length === 0 ? 0 : numeral(Rose[0].BALANCE).format("0,0")}đ
+                                    </Text></Text>
+                        {/* <TouchableOpacity
+                            onPress={() => {
+                                this.props.navigation.navigate('detailrose')
+                            }}
+                        >
+                            <Image
+                                source={require('../../../assets/images/right.png')}
+                                style={{ width: 18, height: 18 }}
+                            />
+                        </TouchableOpacity> */}
+                    </View>
+                    <View>
+                        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingBottom: 20 }}>
+                            <View style={{ width: sizeWidth(100), backgroundColor: '#E1AC06' }}>
+                                <Text style={{ fontSize: 16, padding: 10, fontWeight: 'bold', color: 'white' }}>Tài khoản ngân hàng</Text>
+                            </View>
+                        </View>
+                        <View>
+                            {authUser.GROUPS == 8 ? <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+                                <Text style={{ padding: 10, fontSize: sizeFont(4.5) }}>Để nâng cấp thành tài khoản CTV bạn cần nhập vào mã giới thiệu</Text>
+                                <TextInput
+                                    placeholder="- Mã giới thiệu"
+                                    style={{ paddingLeft:10, width: sizeWidth(60), height: sizeHeight(6), borderColor: '#E1AC06', borderWidth: 2,borderRadius:5 }}
+
+                                />
+                            </View> : null}
+                        </View>
+                    </View>
+                    <View style={{ justifyContent: 'center', alignItems: 'center', paddingBottom: 20 }}>
+                        <TouchableOpacity
+                            style={{
+                                flexDirection: 'row', alignItems: 'center', backgroundColor: '#149CC6',
+                                width: sizeWidth(40), justifyContent: 'center', marginTop: 20
+                            }}
 
 
-                        )
-                    })}
+                            onPress={() =>
+                                this.update()
+                            }>
+                            <Text style={{ padding: 10,color:'#fff',fontWeight:'bold' }}>Cập nhật</Text>
+                        </TouchableOpacity>
+                    </View>
+                </ScrollView>
 
-                </View> : null}
+
+
+
+
             </View>
         )
     }
@@ -657,6 +551,14 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         borderBottomWidth: 1,
         borderBottomColor: '#AAAAAA',
+        alignItems: 'center'
+    },
+    content1: {
+        height: sizeHeight(5),
+        paddingLeft: 10,
+        paddingRight: 10,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
         alignItems: 'center'
     }
 })

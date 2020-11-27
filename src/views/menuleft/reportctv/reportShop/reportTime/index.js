@@ -86,7 +86,7 @@ class index extends Component {
               <TouchableOpacity
                 onPress={this.showDatePicker1}
               >
-                <Text style={{ fontSize: 12 }}>Từ ngày</Text>
+                <Text style={{ fontSize: 12 }}>Bắt đầu</Text>
                 <Text style={{ fontSize: 12 }}>{this.state.startTime}</Text>
               </TouchableOpacity>
 
@@ -108,7 +108,7 @@ class index extends Component {
               <TouchableOpacity
                 onPress={this.showDatePicker2}
               >
-                <Text style={{ fontSize: 12 }}>Đến</Text>
+                <Text style={{ fontSize: 12 }}>Kết thúc</Text>
                 <Text style={{ fontSize: 12 }}>{this.state.endTime}</Text>
               </TouchableOpacity>
               <DateTimePickerModal
@@ -203,8 +203,9 @@ const styles = StyleSheet.create({
     borderColor: '#E1AC06',
     paddingLeft: 10,
     paddingRight: 10,
+    width:sizeWidth(30),
     borderWidth: 2,
-    borderRadius: 15,
+    borderRadius: 5,
     height:sizeHeight(5),
   },
   confix1: {

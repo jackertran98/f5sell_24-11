@@ -12,7 +12,7 @@ class ReportList extends Component {
         super(props)
         this.state = {
             data: [],
-            selectyear: '',
+            selectyear: '2020',
             selectmonth: '',
             selectisu: '',
 
@@ -66,10 +66,9 @@ class ReportList extends Component {
                                         { label: '2020', value: '2020' },
                                         { label: '2019', value: '2019' }
                                     ]}
-                                    zIndex={5000}
                                     defaultValue={selectyear}
-                                    placeholder="Chọn năm"
-                                    containerStyle={{ height: 40 ,zIndex:10}}
+                                    placeholder="2020"
+                                    containerStyle={{ height: sizeHeight(5)}}
                                     style={{ backgroundColor: '#fafafa', width: sizeWidth(30), borderColor: '#E1AC06', borderWidth: 2 }}
                                     itemStyle={{
                                         justifyContent: 'flex-start'
@@ -100,7 +99,7 @@ class ReportList extends Component {
                                     ]}
                                     defaultValue={selectmonth}
                                     placeholder="4"
-                                    containerStyle={{ height: 40 }}
+                                    containerStyle={{ height: sizeHeight(5) }}
                                     style={{ backgroundColor: '#fafafa', width: sizeWidth(20), borderColor: '#E1AC06', borderWidth: 2 }}
                                     itemStyle={{
                                         justifyContent: 'flex-start'
@@ -132,8 +131,8 @@ class ReportList extends Component {
                                 ]}
                                 zIndex={500}
                                 defaultValue={selectisu}
-                                placeholder="Sắp xếp"
-                                containerStyle={{ height: sizeHeight(6) }}
+                                placeholder="Tên CTV"
+                                containerStyle={{ height: sizeHeight(5) }}
                                 style={{ backgroundColor: '#fafafa', width: sizeWidth(35), borderColor: '#E1AC06', borderWidth: 2 }}
                                 itemStyle={{
                                     justifyContent: 'flex-start'

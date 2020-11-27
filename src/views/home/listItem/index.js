@@ -179,7 +179,7 @@ class ListProducts extends Component {
                 width: sizeWidth(90), height: sizeHeight(6), backgroundColor: '#000090',
                 justifyContent: 'center', alignItems: 'center', borderRadius: 50
               }}
-              onPress={() => alert("hí hí")}
+              onPress={() => this.props.navigation.navigate('Thông tin CTV')}
             >
               <Text style={{ color: 'white' }}>Đăng ký để trở thành Cộng tác viên</Text>
             </TouchableOpacity> : <TouchableOpacity

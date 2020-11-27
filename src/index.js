@@ -16,7 +16,6 @@ import SplashScreen from "react-native-splash-screen";
 import { sizeWidth, sizeHeight, sizeFont } from "./utils/helper/size.helper";
 import { COLOR } from "./utils/color/colors";
 import { Platform } from "react-native";
-import { PersistGate } from 'redux-persist/integration/react'
 var totalPercen = 0;
 
 
@@ -51,9 +50,6 @@ export default class App extends Component {
         break;
     }
   };
-  hanfamr=()=>{
-    
-  }
   onDownloadProgress = (downloadProgress) => {
     this.setState(
       {

@@ -235,7 +235,7 @@ class ShopOrder extends Component {
                                         END_TIME: this.state.endTime,
                                         STATUS: selectedValue,
                                         PAGE: 1,
-                                        NUMOFPAGE: 10,
+                                        NUMOFPAGE: 300,
                                         IDSHOP: this.props.idshop.USER_CODE,
                                     })
                                         .then((res) => {

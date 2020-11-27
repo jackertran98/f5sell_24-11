@@ -16,23 +16,24 @@ class index extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            selectedValue: '',
+            selectedValue: "",
             isselectedValue: '',
             selectedYear: "2019",
             selectedMoth: '',
             data: [],
             load: true,
+            display:''
         }
     }
     handle = () => {
-        const { selectedMoth, selectedYear, selectedValue } = this.state;
+        const { selectedMoth, selectedYear, selectedValue,display } = this.state;
         ReportFluc({
             USERNAME: this.props.username,
             YEAR: selectedYear,
             MONTH: selectedMoth,
             PR_CODE: '',
-            REPORT_TYPE: '1',
-            DISPLAY_TYPE: '1',
+            REPORT_TYPE: selectedMoth,
+            DISPLAY_TYPE: display,
             IDSHOP: this.props.idshop.USER_CODE
         })
             .then((result) => {
@@ -55,7 +56,7 @@ class index extends Component {
         }
     }
     render() {
-        const { selectedValue, isselectedValue, load, selectedMoth, selectedYear, data } = this.state;
+        const { selectedValue, isselectedValue,display, load, selectedMoth, selectedYear, data } = this.state;
         const color = load ? '#E1AC06' : '#F5F5F5';
         const color3 = load ? '#F5F5F5' : '#E1AC06';
         const colorText1 = load ? 'white' : 'black';
@@ -80,7 +81,7 @@ class index extends Component {
                                 { label: 'Theo tháng', value: '2' }
                             ]}
                             defaultValue={selectedValue}
-                            placeholder="Sắp xếp"
+                            placeholder="- Tất cả -"
                             containerStyle={{ height: 40 }}
                             style={{ backgroundColor: '#fafafa', width: sizeWidth(35), borderColor: '#E1AC06', borderWidth: 2 }}
                             itemStyle={{
@@ -171,18 +172,18 @@ class index extends Component {
                             items={[
                                 { label: 'Danh mục sản phẩm', value: '1' },
                                 { label: 'Thuộc tính sản phẩm', value: '2' },
-                                { label: 'Sản phẩm', value: '4' }
+                                { label: 'Sản phẩm', value: '3' }
                             ]}
-                            defaultValue={selectedValue}
-                            placeholder="Năm"
+                            defaultValue={display}
+                            placeholder="Danh mục sản phẩm"
                             containerStyle={{ height: 40 }}
-                            style={{ backgroundColor: '#fafafa', width: sizeWidth(35), borderColor: '#E1AC06', borderWidth: 2 }}
+                            style={{ backgroundColor: '#fafafa', width: sizeWidth(50), borderColor: '#E1AC06', borderWidth: 2 }}
                             itemStyle={{
                                 justifyContent: 'flex-start'
                             }}
-                            dropDownStyle={{ backgroundColor: '#fafafa', width: sizeWidth(35) }}
+                            dropDownStyle={{ backgroundColor: '#fafafa', width: sizeWidth(50) }}
                             onChangeItem={item => this.setState({
-                                selectedValue: item.value
+                                display: item.value
                             }, () => { this.handle() })}
                         />
                     </View>

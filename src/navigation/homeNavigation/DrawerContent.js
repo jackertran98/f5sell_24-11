@@ -101,8 +101,8 @@ class DrawerContent extends Component {
         const { authUser, status } = this.props;
         const { data } = this.state;
         return (
-            <View>
-                {status != '' ? <View><TouchableOpacity style={{ flexDirection: 'row', backgroundColor: "#E1AC06", height: 100, alignItems: "center", paddingLeft: 10 }}
+            <View style={{ height: sizeHeight(100) }}>
+                {status != '' ? <View><TouchableOpacity style={{ flexDirection: 'row', backgroundColor: "#E1AC06", height: 100, justifyContent: 'space-evenly', alignItems: "center", paddingLeft: 10 }}
                     onPress={() => { this.props.navigation.navigate('Thông tin CTV') }}
                 >
                     <View style={{
@@ -114,7 +114,7 @@ class DrawerContent extends Component {
                             style={{ width: 50, height: 50 }}
                         />
                     </View>
-                    <View style={{ marginLeft: 15, flexDirection: 'column' }}>
+                    <View style={{ marginLeft: 16, flexDirection: 'column' }}>
                         <Title style={{ fontSize: 20, color: 'white' }}>{authUser.USERNAME}</Title>
 
                     </View>
@@ -137,11 +137,12 @@ class DrawerContent extends Component {
                                 style={{ width: 50, height: 50 }}
                             />
                         </View>
-                        <View style={{ flexDirection: 'row', alignItems: "center", justifyContent: 'center'
-                        
-                    }}>
+                        <View style={{
+                            flexDirection: 'row', alignItems: "center", justifyContent: 'center'
+
+                        }}>
                             <TouchableOpacity
-                                style={{ borderWidth:1,backgroundColor:'#E1AC06',borderColor:'white',width:sizeWidth(27),height:sizeHeight(5),alignItems:'center',justifyContent:'center',marginLeft:sizeWidth(4) }}
+                                style={{ borderWidth: 1, backgroundColor: '#E1AC06', borderColor: 'white', width: sizeWidth(27), height: sizeHeight(5), alignItems: 'center', justifyContent: 'center', marginLeft: sizeWidth(4) }}
                                 onPress={() => {
                                     this.setState({ showAlertOption: true });
                                     this.props.navigation.navigate('SignUp')
@@ -151,7 +152,7 @@ class DrawerContent extends Component {
                                 <Text style={{ color: 'white', fontSize: 14 }}>Đăng ký</Text>
                             </TouchableOpacity>
                             <TouchableOpacity
-                                style={{ borderWidth:1,backgroundColor:'white',borderColor:'white',width:sizeWidth(27),height:sizeHeight(5),alignItems:'center',justifyContent:'center',marginLeft:sizeWidth(2) }}
+                                style={{ borderWidth: 1, backgroundColor: 'white', borderColor: 'white', width: sizeWidth(27), height: sizeHeight(5), alignItems: 'center', justifyContent: 'center', marginLeft: sizeWidth(2) }}
                                 onPress={() => {
                                     this.props.navigation.navigate('SignIn')
                                 }}
@@ -168,7 +169,7 @@ class DrawerContent extends Component {
                                 style={{ width: 30, height: 30 }}
                             />
                         )}
-                        label={({ focused, color }) => <Text style={{ color: '#E1AC06', fontSize: 15, fontWeight: 'bold' }}>Thông tin CTV</Text>}
+                        label={({ focused, color }) => <Text style={{ color: '#E1AC06', fontSize: 16, fontWeight: 'bold' }}>Thông tin CTV</Text>}
                         onPress={() => { this.props.navigation.navigate('Thông tin CTV') }}
                     />} */}
                     <DrawerItem
@@ -178,7 +179,7 @@ class DrawerContent extends Component {
                                 style={{ width: 30, height: 30 }}
                             />
                         )}
-                        label={({ focused, color }) => <Text style={{ color: '#E1AC06', fontSize: 15, fontWeight: 'bold' }}>Chính sách</Text>}
+                        label={({ focused, color }) => <Text style={{ color: '#E1AC06', fontSize: 16, fontWeight: 'bold' }}>Chính sách</Text>}
 
                         onPress={() => { this.props.navigation.navigate('Chính sách') }}
                     />
@@ -190,7 +191,7 @@ class DrawerContent extends Component {
                             />
                         )}
 
-                        label={({ focused, color }) => <Text style={{ color: '#E1AC06', fontSize: 15, fontWeight: 'bold' }}>Báo cáo</Text>}
+                        label={({ focused, color }) => <Text style={{ color: '#E1AC06', fontSize: 16, fontWeight: 'bold' }}>Báo cáo</Text>}
 
                         onPress={() => { this.props.navigation.navigate('report') }}
                     />}
@@ -202,7 +203,7 @@ class DrawerContent extends Component {
                             />
                         )}
 
-                        label={({ focused, color }) => <Text style={{ color: '#E1AC06', fontSize: 15, fontWeight: 'bold' }}>Đào tạo</Text>}
+                        label={({ focused, color }) => <Text style={{ color: '#E1AC06', fontSize: 16, fontWeight: 'bold' }}>Đào tạo</Text>}
 
                         onPress={() => { this.props.navigation.navigate('Đào tạo') }}
                     />}
@@ -213,7 +214,7 @@ class DrawerContent extends Component {
                                 style={{ width: 30, height: 30 }}
                             />
                         )}
-                        label={({ focused, color }) => <Text style={{ color: '#E1AC06', fontSize: 15, fontWeight: 'bold' }}>Quét mã QR code</Text>}
+                        label={({ focused, color }) => <Text style={{ color: '#E1AC06', fontSize: 16, fontWeight: 'bold' }}>Quét mã QR code</Text>}
 
                         onPress={() => { }}
                     />
@@ -225,7 +226,7 @@ class DrawerContent extends Component {
                             />
                         )}
 
-                        label={({ focused, color }) => <Text style={{ color: '#E1AC06', fontSize: 15, fontWeight: 'bold' }}>Tin tức, sự kiện</Text>}
+                        label={({ focused, color }) => <Text style={{ color: '#E1AC06', fontSize: 16, fontWeight: 'bold' }}>Tin tức, sự kiện</Text>}
 
                         onPress={() => { this.props.navigation.navigate('Tin tức-sự kiện') }}
                     />}
@@ -236,7 +237,7 @@ class DrawerContent extends Component {
                                 style={{ width: 30, height: 30 }}
                             />
                         )}
-                        label={({ focused, color }) => <Text style={{ color: '#E1AC06', fontSize: 15, fontWeight: 'bold' }}>Chia sẻ ứng dụng</Text>}
+                        label={({ focused, color }) => <Text style={{ color: '#E1AC06', fontSize: 16, fontWeight: 'bold' }}>Chia sẻ ứng dụng</Text>}
 
                         onPress={() => this.shareApp()}
 
@@ -248,61 +249,77 @@ class DrawerContent extends Component {
                                 style={{ width: 30, height: 30 }}
                             />
                         )}
-                        label={({ focused, color }) => <Text style={{ color: '#E1AC06', fontSize: 15, fontWeight: 'bold' }}>{`Giới thiệu ${this.props.idshop.SHOP_NAME}`}</Text>}
+                        label={({ focused, color }) => <Text style={{ color: '#E1AC06', fontSize: 16, fontWeight: 'bold' }}>{`Giới thiệu ${this.props.idshop.SHOP_NAME}`}</Text>}
 
                         onPress={() => { this.props.navigation.navigate('Giới thiệu') }}
                     />
                 </Drawer.Section>
                 <View>
                     {this.props.status === "" ? null : (
-                            <TouchableOpacity style={{ flexDirection: 'row', height: 100, alignItems: "center", justifyContent: 'center' }}
-                                onPress={() => {
-                                    this.setState({ showAlertOption: true });
-                                    this.show();
-                                }}
-                            >
-                                <Image
-                                    source={require('../../assets/images/logout.png')}
-                                    style={{ width: 27, height: 27, marginRight: 10 }}
-                                />
-                                <Text style={{ color: 'red', fontSize: 16, fontWeight: 'bold' }}>Đăng xuất</Text>
-                            </TouchableOpacity>
-                        )}
+                        <TouchableOpacity style={{ flexDirection: 'row', height: 100, alignItems: "center", justifyContent: 'center' }}
+                            onPress={() => {
+                                this.setState({ showAlertOption: true });
+                                this.show();
+                            }}
+                        >
+                            <Image
+                                source={require('../../assets/images/logout.png')}
+                                style={{ width: 27, height: 27, marginRight: 10 }}
+                            />
+                            <Text style={{ color: 'red', fontSize: 16, fontWeight: 'bold' }}>Đăng xuất</Text>
+                        </TouchableOpacity>
+                    )}
                 </View>
                 <View style={{ justifyContent: 'center', alignItems: 'center' }}>
                     <TouchableOpacity
                         onPress={() => {
                             this.props.navigation.navigate('StartTwo')
                         }}
+                        style={{marginTop:sizeHeight(5)}}
                     >
-                        <Text >Đổi mã shop</Text>
+                        <Text style={{color:'red'}}>Đổi mã shop</Text>
                     </TouchableOpacity>
                 </View>
-                {/* <View>
-                    <Modal
-                        animationType="slide"
-                        transparent={true}
-                        visible={modalVisible}
-                        onRequestClose={() => {
-                            Alert.alert("Modal has been closed.");
-                        }}
-                    >
-                        <View style={styles.centeredView}>
-                            <View style={styles.modalView}>
-                                <Text style={styles.modalText}>Hello World!</Text>
-
-                                <TouchableHighlight
-                                    style={{ ...styles.openButton, backgroundColor: "#2196F3" }}
-                                    onPress={() => {
-                                        setModalVisible(!modalVisible);
-                                    }}
-                                >
-                                    <Text style={styles.textStyle}>Hide Modal</Text>
-                                </TouchableHighlight>
-                            </View>
+                <View style={{position: 'absolute', bottom: 0,width:sizeWidth(80) }}>
+                    <View style={{flexDirection:'row',justifyContent:'space-evenly'}}>
+                        <View>
+                            <TouchableOpacity
+                                onPress={() => {
+                                    Alert.alert("Thông báo", "Hiện tại shop chưa có Fanpage trên Facebook")
+                                }}
+                            >
+                                <Image
+                                    source={require('../../assets/images/facebook.png')}
+                                    style={{ width: 45, height: 45 }}
+                                />
+                            </TouchableOpacity>
                         </View>
-                    </Modal>
-                </View> */}
+                        <View>
+                            <TouchableOpacity
+                                onPress={() => {
+                                    Alert.alert("Thông báo", "Hiện tại shop chưa có group trên Facebook")
+                                }}
+                            >
+                                <Image
+                                    source={require('../../assets/images/group.png')}
+                                    style={{ width: 45, height: 45 }}
+                                />
+                            </TouchableOpacity>
+                        </View>
+                        <View>
+                            <TouchableOpacity
+                                onPress={() => {
+                                    Alert.alert("Thông báo", "Hiện tại shop chưa có website")
+                                }}
+                            >
+                                <Image
+                                    source={require('../../assets/images/infomation.png')}
+                                    style={{ width: 45, height: 45 }}
+                                />
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                </View>
             </View>
         )
     }
@@ -318,7 +335,7 @@ const mapStateToProps = (state, ownProps) => {
     return {
         status: state.authUser.status,
         authUser: state.authUser.authUser,
-        idshop:state.product.database,
+        idshop: state.product.database,
     }
 }
 const styles = StyleSheet.create({

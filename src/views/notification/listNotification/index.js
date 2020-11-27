@@ -120,8 +120,7 @@ class ListNotification extends Component {
               ]}
               onPress={() => {
                 this.handleUpdate(item);
-                navigation.popToTop();
-                navigation.navigate("order");
+                navigation.navigate("DetailNotifi");
               }}
             >
               <View style={{ flexDirection: 'row' }}>

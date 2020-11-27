@@ -14,6 +14,7 @@ import {
   Animated,
   TouchableHighlight,
   Linking,
+  Alert,
 } from "react-native";
 import { _retrieveData } from "../../../utils/asynStorage";
 import { HeaderLeftComponet } from "../../../components/header"
@@ -72,15 +73,16 @@ class ListProducts extends PureComponent {
           this.setState(
             {
               data: result.data.DETAIL,
-            },
-            () => {
-              this.setState({ loading: false });
             }
           );
         } else {
-          this.setState({ loading: false }, () =>
-            AlertCommon("Thông báo", result.data.RESULT, () => null)
+          
+          this.setState(
+            {
+              data: [],
+            }
           );
+         
         }
       })
       .catch((error) => {
