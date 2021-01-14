@@ -107,7 +107,7 @@ class SignIn extends Component {
                   } else {
                     await this.props
                       .LoginPhone({
-                        IDSHOP: this.props.idshop.USER_CODE,
+                        IDSHOP: 'ABC123',
                         USERNAME: phoneText,
                         PASSWORD: password,
                       })

@@ -24,7 +24,7 @@ class MothReport extends Component {
             PR_CODE: '',
             REPORT_TYPE: '1',
             DISPLAY_TYPE: '1',
-            IDSHOP: this.props.idshop.USER_CODE
+            IDSHOP: "ABC123"
         })
             .then((result) => {
                 console.log("this is ReportFluc", result);

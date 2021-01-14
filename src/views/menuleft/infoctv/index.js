@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, Picker, FlatList, ScrollView, Alert } from 'react-native';
+import { StyleSheet, Text, View, Picker, FlatList, ScrollView, Alert, Modal, Image } from 'react-native';
 import { connect } from "react-redux";
 import { GetListCTV } from '../../../service/account';
 import ListCTV from "../../../components/listctv";
 import { GetCity } from "../../../service/countries"
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { TextInput, TouchableOpacity } from 'react-native-gesture-handler';
 import { DataTable } from 'react-native-paper';
 import Loading from '../../../components/loading';
 import { validate } from 'numeral';
@@ -25,7 +25,10 @@ class InfoCTV extends Component {
             data: [],
             dataCountry: [],
             loading: false,
-            selectedValue: 'Tất cả',
+            selectedValue: '',
+            modalVisible: false,
+            selectbool: 'Tất cả',
+            codeuser: '',
         }
     }
     handleLoad = () => {
@@ -37,10 +40,10 @@ class InfoCTV extends Component {
             I_CITY: '',
             I_PAGE: 1,
             NUMOFPAGE: 50,
-            IDSHOP: this.props.idshop.USER_CODE,
+            IDSHOP: "ABC123",
         })
             .then((result) => {
-                console.log("aaaaaaaaaaaaaa",result)
+                console.log("aaaaaaaaaaaaaa", result)
                 if (result.data.ERROR === "0000") {
                     this.setState({ data: result.data.INFO }
                     );
@@ -62,36 +65,91 @@ class InfoCTV extends Component {
         this.handleLoad();
     }
     render() {
-        const { dataCountry, data } = this.state;
+        const { dataCountry, data, modalVisible, selectbool, codeuser } = this.state;
         const { selectedValue, loading } = this.state;
         const { GROUPS } = this.props.authUser;
         return (
             <View>
-                {GROUPS === "3" ? <View>
-                    <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-                        <Text style={{ fontSize: 18,padding:7,fontWeight:'bold' }}>Tỉnh</Text>
-                        <View style={{ height: 50, width: 200, borderColor: '#E1AC06', borderWidth: 1,marginBottom:10,borderRadius:10 }}>
-                            <Picker
-                                selectedValue={this.state.selectedValue}
-                                onValueChange={(itemValue) => this.setState({ selectedValue: itemValue })}
+                <View>
+                    <View style={{ justifyContent: 'space-evenly', alignItems: 'center', flexDirection: 'row', marginTop: 10, marginBottom: 5 }}>
+                        <Text style={{ width: sizeWidth(20) }}>Tỉnh</Text>
+                        <View style={{flexDirection:'row',height: sizeHeight(5), width: sizeWidth(55), borderColor: '#E1AC06', borderWidth: 1, justifyContent: 'space-between', alignItems: 'center',paddingLeft:5,paddingRight:5 }}>
+
+
+                            <Modal
+                                animationType="slide"
+                                transparent={true}
+                                visible={modalVisible}
+                                onRequestClose={() => {
+                                    Alert.alert("Modal has been closed.");
+                                }}
                             >
-                                {dataCountry.map((Value) => {
-                                    return (
-                                        <Picker.Item label={Value.NAME} value={Value.MATP} />
-                                    )
-                                })}
-                            </Picker>
+                                <View style={styles.centeredView}>
+                                    <View style={styles.modalView}>
+                                        <ScrollView
+
+                                        >
+                                            {dataCountry.map((Value) => {
+                                                return (
+
+                                                    <TouchableOpacity
+                                                        onPress={() => {
+                                                            this.setState({
+                                                                selectedValue: Value.MATP,
+                                                                selectbool: Value.NAME,
+                                                                modalVisible: !modalVisible
+                                                            })
+
+                                                        }}
+                                                        style={{ height: sizeHeight(5), borderTopColor: 'gray', borderTopWidth: 0.5, borderBottomColor: 'gray', borderBottomWidth: 0.5, width: sizeWidth(60), justifyContent: 'center', paddingLeft: 10 }}
+                                                    >
+                                                        <Text>{Value.NAME}</Text>
+                                                    </TouchableOpacity>
+                                                )
+                                            })}
+                                        </ScrollView>
+                                    </View>
+                                </View>
+                            </Modal>
+                            <TouchableOpacity
+
+                                onPress={() => {
+                                    this.setState({ modalVisible: true })
+                                }}
+
+                            >
+                                <View style={{ justifyContent: 'flex-end', flexDirection: 'row', alignItems: 'center' }}>
+                                    <Text>{selectbool}</Text>
+                                </View>
+                            </TouchableOpacity>
+                            <View>
+                                <Image
+                                    source={require('../../../assets/images/dowmenu.png')}
+                                    style={{ width: 20, height: 20, marginLeft: sizeWidth(5) }}
+                                />
+                            </View>
                         </View>
+
+                    </View>
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'center', marginBottom: 5 }}>
+                        <Text style={{ width: sizeWidth(20) }}>Tìm kiếm</Text>
+                        <TextInput
+                            placeholder="Theo tên hoặc mã user"
+                            onChangeText={(text) => { this.setState({ codeuser: text }) }}
+                            style={{ width: sizeWidth(55), height: sizeHeight(5), borderColor: '#E1AC06', borderWidth: 1, paddingLeft: 10 }}
+                        />
+                    </View>
+                    <View>
                         <TouchableOpacity
                             onPress={() => {
                                 this.setState({ loading: true }, async () => {
                                     await GetListCTV({
                                         USERNAME: '',
-                                        SEARCH: '',
+                                        SEARCH: codeuser,
                                         ID_CITY: selectedValue,
                                         I_PAGE: 1,
                                         NUMOFPAGE: 25,
-                                        IDSHOP: this.props.idshop.USER_CODE,
+                                        IDSHOP: "ABC123",
                                     })
                                         .then((res) => {
                                             console.log('anc+errr', res)
@@ -112,13 +170,16 @@ class InfoCTV extends Component {
                                     this.setState({ loading: false });
                                 });
                             }}
+                            style={{ justifyContent: 'center', alignItems: 'center' }}
                         >
-                            <Text style={{ backgroundColor: '#E1AC06', padding: 9, color: 'white', paddingLeft: 40, paddingRight: 40,borderRadius:5 }}>Lọc</Text>
+                            <View style={{ backgroundColor: '#E1AC06', width: sizeWidth(30), height: sizeHeight(5), marginBottom: 10, justifyContent: 'center', alignItems: 'center' }}>
+                                <Text style={{ color: 'white' }}>Lọc</Text>
+                            </View>
                         </TouchableOpacity>
                     </View>
-                    <Text style={{marginLeft:5,fontWeight:'bold'}}>Tổng số: {data.length} CTV</Text>
-                    {loading === false ? <ScrollView>
-                        <View style={{ flexDirection: 'row',height:sizeHeight(77)}}>
+                    <Text style={{ marginLeft: 10, fontWeight: 'bold', marginBottom: 10 }}>Tổng số: {data.length} CTV</Text>
+                    {loading === false ? <View>
+                        <View style={{ flexDirection: 'row', height: sizeHeight(62) }}>
                             <View>
                                 <View style={styles.container1}>
                                     <View style={styles.cuttoms}>
@@ -131,7 +192,7 @@ class InfoCTV extends Component {
                                         <Text style={{ color: 'white' }}>Số điện thoại</Text>
                                     </View>
                                     <View style={styles.cuttoms}>
-                                        <Text style={{ color: 'white' }}>Số dư</Text>
+                                        <Text style={{ color: 'white' }}>Loại TK</Text>
                                     </View>
                                 </View>
                                 <ScrollView style={{ borderColor: '#E1AC06', borderWidth: 2, backgroundColor: '#EFEFEF' }}>
@@ -140,8 +201,7 @@ class InfoCTV extends Component {
                                             <View>
                                                 <TouchableOpacity
                                                     onPress={() => this.props.navigation.navigate("Detail container", {
-                                                        ID_CODE: Val.USER_CODE,
-                                                        USERNAME: Val.USERNAME,
+                                                        Data: Val,
                                                     })
                                                     }
                                                 >
@@ -157,7 +217,7 @@ class InfoCTV extends Component {
                                                         </View>
                                                         <View style={styles.children}>
 
-                                                            <Text >{numeral(Val.BALANCE).format("0,0")}</Text>
+                                                            <Text >{Val.GROUPS == 5 ? "CTV" : "KH"}</Text>
 
                                                         </View>
 
@@ -170,8 +230,8 @@ class InfoCTV extends Component {
                                 </ScrollView>
                             </View>
                         </View>
-                    </ScrollView> : <Loading />}
-                </View> : <Usechildren navigation={this.props.navigation}/>}
+                    </View> : <Loading />}
+                </View>
             </View>
         )
     }
@@ -198,31 +258,57 @@ export default connect(
 const styles = StyleSheet.create({
     container1: {
         flexDirection: 'row',
-        
+
 
     },
     container: {
         flexDirection: 'row',
-        borderWidth: 1,
-        borderBottomWidth: 1,
-        borderColor: '#E1AC06',
     },
     children: {
         borderRightColor: '#E1AC06',
-        borderRightWidth: 2,
-        textAlign:'center',
-        justifyContent:'center',
+        borderRightWidth: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
         width: sizeWidth(25),
-        height:sizeHeight(5),
-        paddingLeft:sizeWidth(2),
+        height: sizeHeight(5),
+        borderBottomWidth: 1,
+        borderBottomColor: '#E1AC06',
     },
     cuttoms: {
         borderLeftColor: 'white',
-        height:sizeHeight(5),
-        borderLeftWidth:2,
+        height: sizeHeight(5),
+        borderLeftWidth: 1,
         backgroundColor: "#E1AC06",
-        justifyContent:'center',
+        justifyContent: 'center',
         alignItems: 'center',
         width: sizeWidth(25),
     },
+    centeredView: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        marginTop: 22
+    },
+    modalView: {
+        width: sizeWidth(80),
+        height: sizeHeight(80),
+        margin: 20,
+        backgroundColor: "white",
+        borderRadius: 5,
+        padding: 35,
+        alignItems: "center",
+        shadowColor: "#000",
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 5
+    },
+    textStyle: {
+        color: "white",
+        fontWeight: "bold",
+        textAlign: "center"
+    },
+    modalText: {
+        marginBottom: 15,
+        textAlign: "center"
+    }
 })

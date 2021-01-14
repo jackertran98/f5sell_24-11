@@ -37,7 +37,7 @@ class About extends Component {
       USERNAME: authUser.USERNAME,
       TYPES: 1,
       CATEGORY: "",
-      IDSHOP: id.USER_CODE,
+      IDSHOP: 'ABC123',
     })
       .then((result) => {
         if (result.data.ERROR === "0000") {

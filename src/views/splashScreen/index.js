@@ -17,20 +17,9 @@ class SplashScreen extends Component {
     handload = async () => {
         let [username, password] = ['', ''];
         let id = '';
-        let [codeshop, pass] = ['', ''];
-        await _retrieveData(IDSHOP).then((result) => {
-            if (result) {
-                codeshop = result.substr(1).slice(0, -1)
-            }
-        })
         await _retrieveData(USER_NAME).then((result) => {
             if (result) {
                 username = result.substr(1).slice(0, -1)
-            }
-        })
-        await _retrieveData(IDSHOP).then((result) => {
-            if (result) {
-                id = result.substr(1).slice(0, -1)
             }
         })
         await _retrieveData(PASSWORD).then((result) => {
@@ -41,54 +30,18 @@ class SplashScreen extends Component {
             console.log('err')
         })
         this.props.LoginPhone({
-            IDSHOP: id,
+            IDSHOP: 'ABC123',
             USERNAME: username,
             PASSWORD: password,
         })
             .then((result) => {
                 console.log("this is spalce", result);
-                if (result.data.ERROR === "0000") {
-                    this.props.GetIdShop({
-                        IDSHOP: codeshop,
-                        USERNAME: '',
-                    })
-                        .then((res) => {
-                            console.log("this is res", res)
-                            if (res.data.ERROR == "0000") {
-                                this.props.navigation.navigate("screenHome");
-                            }
-
-                            else {
-                                Alert.alert('Thông báo', 'Sai thông tin mã shop, xin vui lòng thử lại')
-                            }
-                        })
-                        .catch((err) => {
-                            this.props.navigation.navigate("StartTwo");
-                        });
-                } else {
-                    this.props.GetIdShop({
-                        IDSHOP: codeshop,
-                        USERNAME: '',
-                    })
-                        .then((res) => {
-                            console.log("this is res", res)
-                            if (res.data.ERROR == "0000") {
-                                this.props.navigation.navigate("screenHome");
-                            }
-
-                            else {
-                                Alert.alert('Thông báo', 'Sai thông tin mã shop, xin vui lòng thử lại')
-                            }
-                        })
-                        .catch((err) => {
-                            this.props.navigation.navigate("StartTwo");
-                        });
-                }
-                console.log("login_result", result)
-            }).catch((errr) => {
-                console.log("erroooooooooo")
-
+                    this.props.navigation.navigate("screenHome");
+               
             })
+            .catch((err) => {
+                
+            });
     }
     componentDidMount() {
         this.handload();
@@ -97,7 +50,6 @@ class SplashScreen extends Component {
         return (
             <View>
                 <Image
-                    source={require('../../assets/images/first.png')}
                     style={{ width: sizeWidth(100), height: sizeHeight(100) }}
                 />
             </View>

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, Image, Text } from "react-native";
+import { View, Image, Text, SafeAreaView } from "react-native";
 import AppNavigation from "./navigation";
 import { Provider, connect } from "react-redux";
 import "react-native-gesture-handler";
@@ -64,25 +64,24 @@ export default class App extends Component {
         ).toFixed(2);
       }
     );
-
     if (downloadProgress.receivedBytes == downloadProgress.totalBytes) {
       this.time = setTimeout(() => {
         this.setState({ loading: false });
       }, 2500);
     }
-    
+
     //this.setState({loading: false});
   };
   componentDidMount() {
     //  if (Platform.OS === "android") {
     SplashScreen.hide();
     // }
-  //   codePush.sync({
-  //     updateDialog: true,
-  //     installMode: codePush.InstallMode.IMMEDIATE
-  // })
-  
-}
+    //   codePush.sync({
+    //     updateDialog: true,
+    //     installMode: codePush.InstallMode.IMMEDIATE
+    // })
+
+  }
   onError = (error) => {
     console.log("An error occurred. " + error);
   };
@@ -154,15 +153,17 @@ export default class App extends Component {
         </ProgressCircle>
       </View>
     ) : (
-      <Root>
+        <Root>
           <SafeAreaProvider>
+            {/* <SafeAreaView> */}
             <Provider store={store}>
-            
-                  <AppNavigation />
-                  
+
+              <AppNavigation />
+
             </Provider>
+            {/* </SafeAreaView> */}
           </SafeAreaProvider>
-      </Root>
-    );
+        </Root>
+      );
   }
 }

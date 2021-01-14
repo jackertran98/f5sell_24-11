@@ -129,7 +129,7 @@ class DetailProducts extends Component {
     const { ID_PRODUCT } = this.props.route.params;
     await getDetails({
       USERNAME: status === "" ? null : authUser.USERNAME,
-      IDSHOP: this.props.idshop.USER_CODE,
+      IDSHOP: "ABC123",
       IDPRODUCT: ID_PRODUCT,
     })
       .then((result) => {
@@ -269,7 +269,16 @@ class DetailProducts extends Component {
     var email = `${data.LINK_AFFILIATE}`;
     Clipboard.setString(email);
   }
+  checkTime = (a, b) => {
+    var start = a;
+    var end = b;
+    var datePart1 = start.split("/");
+    var datePart2 = end.split("/");
 
+    var dateObject1 = new Date(+datePart1[2], datePart1[1] - 1, +datePart1[0]);
+    var dateObject2 = new Date(+datePart2[2], datePart2[1] - 1, +datePart2[0]);
+    return dateObject2 - dateObject1;
+  }
   showDanhMuc = () => {
     var { data } = this.state;
     if (data) {
@@ -377,14 +386,24 @@ class DetailProducts extends Component {
                 {data.PRODUCT_NAME}
               </Text>
               <View style={styles.viewChildDetail}>
-                <Text style={{ fontSize: sizeFont(4), color: COLOR.BUTTON, fontWeight: "bold" }}>
-                Giá sản phẩm: {numeral(handleMoney(status, data, authUser)).format("0,0")} VNĐ
-              </Text>
+              <Text style={{ fontSize: sizeFont(4), color: COLOR.BUTTON, fontWeight: "500" }}>
+                  Giá sản phẩm: {data.END_PROMOTION && this.checkTime(data.START_PROMOTION, data.END_PROMOTION) > 0 ? <View>
+                    <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+                      <Text style={{ color: 'red', marginRight: 10 }}>{numeral(data.PRICE_PROMOTION).format("0,0")} đ</Text>
+                      <Text style={{ textDecorationLine: 'line-through', color: 'gray', fontSize: sizeFont(3.5) }}>{numeral(data.PRICE).format("0,0")} đ</Text>
+                    </View>
+                  </View> : <Text >
+                      {numeral(data.PRICE).format("0,0")} đ
+                          </Text>}
+                </Text>
               </View>
               <View style={{marginHorizontal: sizeWidth(2),}}>
-                {this.props.authUser.GROUPS==8 || this.props.authUser.GROUPS==undefined ?null:<Text style={{color:'#006699'}}>Hoa hồng sản phẩm: {numeral(data.COMISSION_PRODUCT * data.PRICE * 0.01).format("0,0")}đ ({data.COMISSION_PRODUCT}%)</Text>}
+              {this.props.authUser.GROUPS == 8 || this.props.authUser.GROUPS == undefined ? null :
+                  <Text style={{ color: '#006699' }}>Hoa hồng sản phẩm: {data.END_PROMOTION && this.checkTime(data.START_PROMOTION, data.END_PROMOTION) > 0 ?
+                    <Text>{numeral(data.COMISSION_PRODUCT * data.PRICE_PROMOTION * 0.01).format("0,0")}đ ({data.COMISSION_PRODUCT}%)</Text> :
+                    <Text>{numeral(data.COMISSION_PRODUCT * data.PRICE * 0.01).format("0,0")}đ ({data.COMISSION_PRODUCT}%)</Text>}</Text>}
               </View>
-              {properties ? <View style={{ paddingLeft: 10, marginTop: 10 }}>
+              {/* {properties ? <View style={{ paddingLeft: 10, marginTop: 10 }}>
                 {properties != [] ? properties.map((val, key) => {
                   return (
                     <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 5 }}>
@@ -409,7 +428,7 @@ class DetailProducts extends Component {
                     </View>
                   )
                 }) : null}
-              </View> : null}
+              </View> : null} */}
 
               <View style={{ paddingLeft: 10, flexDirection: 'row' }}>
                 <Image
@@ -417,14 +436,13 @@ class DetailProducts extends Component {
                   style={{ width: 45, height: 25 }}
                 />
                 <TouchableOpacity
-                  onPress={() => {
-
-                  }}
+                  onPress={() =>
+                    this.props.navigation.navigate("Chi tiết chính sách", {
+                      item: '566',
+                    })
+                  }
                 >
-                  <Text style={{ fontSize: 17, width: sizeWidth(77) }}>Chính sách vận chuyển:
-                  ...........................................................................
-                  ............................................</Text>
-
+                  <Text style={{ fontSize: 17, width: sizeWidth(77), marginLeft: 10, fontStyle: 'italic', textDecorationLine: 'underline' }}>Chính sách vận chuyển</Text>
                 </TouchableOpacity>
               </View>
               <View style={{ marginTop: 10, marginBottom: 10, justifyContent: 'center', alignItems: 'center' }}>

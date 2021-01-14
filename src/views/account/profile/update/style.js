@@ -15,7 +15,7 @@ const styles = StyleSheet.create({
   viewTouchCamera: {
     borderRadius: sizeFont(5),
     borderWidth: 1,
-    borderColor: COLOR.BUTTON,
+    borderColor: COLOR.HEADER,
     width: sizeFont(10),
     height: sizeFont(10),
     alignItems: "center",
@@ -24,6 +24,51 @@ const styles = StyleSheet.create({
     right: sizeWidth(20),
     bottom: sizeHeight(0),
   },
+
+
+
+
+
+  centeredView: {
+    flex: 1,
+    justifyContent:'flex-end',
+    alignItems: "center",
+    marginTop: 22
+  },
+  modalView: {
+    width:sizeWidth(100),
+    height:sizeHeight(50),
+    backgroundColor: "white",
+    
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5
+  },
+  openButton: {
+    backgroundColor: "#F194FF",
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2
+  },
+  textStyle: {
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center"
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: "center"
+  },
+
+
+
+
   styleChild: {
     borderRadius: 6,
     height: 55,
@@ -44,7 +89,7 @@ const styles = StyleSheet.create({
     marginTop: sizeHeight(1),
   },
   infor: {
-    backgroundColor: COLOR.BUTTON,
+    backgroundColor: COLOR.HEADER,
     paddingVertical: sizeHeight(1.5),
   },
   textInfor: {

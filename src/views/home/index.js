@@ -5,7 +5,8 @@ import {
   StatusBar,
   TouchableOpacity,
   ScrollView,
-  StyleSheet
+  StyleSheet,
+  Image
 } from "react-native";
 import { COLOR } from "../../utils/color/colors";
 import {
@@ -15,6 +16,7 @@ import {
 } from "../../utils/helper/size.helper";
 import { connect } from "react-redux";
 import { LoginPhone, UpdateDivice, GetProfile } from "../../action/authAction";
+import { GetInformation } from "../../service/account";
 import { _retrieveData } from "../../utils/asynStorage";
 import { Getwithdrawal } from "../../service/order";
 import { AUTH, USER_NAME } from "../../utils/asynStorage/store";
@@ -61,7 +63,7 @@ class Home extends Component {
         if (result) {
           await this.props
             .GetProfile({
-              IDSHOP: this.props.idshop.USER_CODE,
+              IDSHOP: "ABC123",
               USER_CTV: result.substr(1).slice(0, -1),
               USERNAME: result.substr(1).slice(0, -1),
             })
@@ -75,7 +77,7 @@ class Home extends Component {
             USERNAME: result.substr(1).slice(0, -1),
             PAGE: 1,
             NUMOFPAGE: 5,
-            IDSHOP: this.props.idshop.USER_CODE,
+            IDSHOP: "ABC123",
           })
             .then((result) => {
               if (result.data.ERROR === "0000") {
@@ -90,7 +92,7 @@ class Home extends Component {
           await getListSubProducts({
             USERNAME: null,
             ID_PARENT: null,
-            IDSHOP: this.props.idshop.USER_CODE,
+            IDSHOP: "ABC123",
             SEARCH_NAME: this.state.search,
           })
             .then((result) => {
@@ -141,6 +143,29 @@ class Home extends Component {
     this.handleLoad();
     
     const { navigation } = this.props;
+
+    GetInformation({
+      USERNAME: this.props.authUser.USERNAME,
+      TYPES: 4,
+      CATEGORY: "",
+      IDSHOP: "ABC123",
+    })
+      .then((result) => {
+        if (result.data.ERROR === "0000") {
+          this.setState(
+            {
+              data_news: result.data.INFO,
+              
+            },
+            () => this.setState({ loading: false })
+          );
+        } else {
+          this.setState({ loading: false });
+        }
+      })
+      .catch((err) => {
+        this.setState({ loading: false });
+      });
     
   getListTrend({
       USERNAME: '',
@@ -207,7 +232,7 @@ class Home extends Component {
           <StatusBar
             barStyle={"light-content"}
             backgroundColor={COLOR.HEADER}
-          //translucent
+          //translucent 
           />
 
           <ScrollView>
@@ -246,19 +271,25 @@ class Home extends Component {
             <View>
                  
             </View> */}
-              <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                <Text style={styles.title}>Tin tức</Text>
+            {this.state.data_news==[]?null:<View>
+              <View style={{ flexDirection: 'row', justifyContent: 'space-between',paddingTop:5 }}>
+                <Text style={styles.title}>TIN TỨC</Text>
                 <TouchableOpacity
                   onPress={() =>
                     this.props.navigation.navigate("Tin tức-sự kiện")}
-                ><Text style={styles.title}>Xem thêm</Text></TouchableOpacity>
+                    style={{flexDirection:'row',alignItems:'center'}}
+                ><Text style={[styles.title,styles.content]}>Xem thêm</Text>
+                  <Image source={require('../../assets/images/right.png')}
+                  style={{ height: 15, width: 15, marginLeft: 7 }}
+                />
+                </TouchableOpacity>
               </View>
               <View>
-                <News navigation={navigation} />
+                <News navigation={navigation} data={this.state.data_news}/>
+              </View>
               </View>
 
-
-
+              }
             </View>
           </ScrollView>
         </View>
@@ -269,6 +300,9 @@ class Home extends Component {
 const styles = StyleSheet.create({
   title: {
     fontSize: sizeFont(4.5)
+  },
+  content:{
+    color:'#166CEE'
   }
 })
 

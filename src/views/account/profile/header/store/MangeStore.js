@@ -62,7 +62,7 @@ class MangeStore extends Component {
       ID_CITY: cityID,
       I_PAGE: 10,
       NUMOFPAGE: this.offset,
-      IDSHOP: this.props.idshop.USER_CODE,
+      IDSHOP: "ABC123",
     })
       .then((result) => {
       })

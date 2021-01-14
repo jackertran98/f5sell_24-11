@@ -31,7 +31,7 @@ class Policy extends Component {
       USERNAME: authUser.USERNAME,
       TYPES: 2,
       CATEGORY: "",
-      IDSHOP: this.props.idshop.USER_CODE,
+      IDSHOP: "ABC123",
     })
       .then((result) => {
         if (result.data.ERROR === "0000") {

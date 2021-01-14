@@ -8,6 +8,7 @@ var numeral = require("numeral");
 import { getListOrder } from '../../../service/order';
 import Loading from '../../../components/loading';
 import DropDownPicker from 'react-native-dropdown-picker';
+import {GetCity,GetDistrict} from '../../../service/countries';
 import Icon from 'react-native-vector-icons/Feather';
 
 
@@ -27,6 +28,7 @@ class UserOrder extends Component {
             selectedValue: '',
             refreshing: true,
             pickerOpacity: 0,
+            city:[],
             opacityOfOtherItems: 1,
             label: 'Firstvalue',
             country: 'uk',
@@ -113,19 +115,23 @@ class UserOrder extends Component {
         var mm = d.getMonth() + 1;
         var yy = d.getFullYear();
         var all = yy + "-" + mm + "-" + dd;
-
+        var dpressent=new Date();
         // console.log("this is all",date)
         var d1 = new Date(all);
 
         var d0 = d1.getTime();
         var d2 = date.getTime();
+        var dpre=dpressent.getTime();
 
         console.log(d0);
         console.log(d2);
+        console.log(dpre);
         if (d2 < d0) {
-            Alert.alert("Thông báo", "Thời gian không hợp lệ, mời nhập lại")
+            return Alert.alert("Thông báo", "Thời gian không hợp lệ, mời nhập lại")
         } else if (d2 - d0 < 5184000) {
-            Alert.alert("Thông báo", "Thời gian không được quá 60 ngày, mời nhập lại")
+            return Alert.alert("Thông báo", "Thời gian không được quá 60 ngày, mời nhập lại")
+        }else if(dpre<d2){
+            return Alert.alert("Thông báo", "Bạn đã nhập quá thời gian hiện tại, mời nhập lại")
         }
         else {
             this.setState({
@@ -145,7 +151,7 @@ class UserOrder extends Component {
             STATUS: '',
             PAGE: 1,
             NUMOFPAGE: 100,
-            IDSHOP: this.props.idshop.USER_CODE,
+            IDSHOP: 'ABC123',
         })
             .then((res) => {
                 console.log("aaaaaaaaaa",res);
@@ -171,11 +177,19 @@ class UserOrder extends Component {
 
     // }
     componentDidMount() {
+        GetCity({
+
+        }).then((res)=>{
+                this.setState({
+                    city:res.data.INFO
+                })
+        })
         this.handleLoad();
+
     }
     checkColor = (a) => {
         if (a.STATUS == 1) {
-            return <View style={{ backgroundColor: '#E1AC06', width: sizeWidth(30), height: sizeHeight(4), justifyContent: 'center', alignItems: 'center' }}>
+            return <View style={{ backgroundColor: '#4a8939', width: sizeWidth(30), height: sizeHeight(4), justifyContent: 'center', alignItems: 'center' }}>
                 <Text style={{ color: '#FFFFFF', }}>{a.STATUS_NAME}</Text>
             </View>
         } else if (a.STATUS == 2) {
@@ -201,27 +215,21 @@ class UserOrder extends Component {
         }
     }
     render() {
-        const { selectedValue, Data, loading, refreshing } = this.state;
+        const { selectedValue, Data, loading, refreshing,city } = this.state;
         console.log("list data", Data);
-
         return (
             <View style={{ marginBottom: sizeHeight(30) }}>
                 <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', marginTop: 30 }}>
                     <View style={styles.confix}>
                         <TouchableOpacity
                             onPress={this.showDatePicker1}
-                            style={{ flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center' }}
+                            style={{justifyContent:'center'}}
 
                         >
-                            <View>
+                            <View style={{}}> 
                                 <Text style={{ fontSize: 12 }}>Bắt đầu</Text>
-                                <Text style={{ fontSize: 12 }}>{this.state.startTime}</Text>
+                                <Text style={{ fontSize: 14 }}>{this.state.startTime}</Text>
                             </View>
-
-                            <Image
-                                style={{ width: 35, height: 35, alignItems: 'center' }}
-                                source={require('../../../assets/images/lich.png')}
-                            />
                         </TouchableOpacity>
                         <DateTimePickerModal
                             isVisible={this.state.isDatePickerVisible}
@@ -233,17 +241,13 @@ class UserOrder extends Component {
                     <View style={styles.confix}>
                         <TouchableOpacity
                             onPress={this.showDatePicker2}
-                            style={{ flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center' }}
+                            style={{  justifyContent: 'center' }}
                         >
                             <View>
                                 <Text style={{ fontSize: 12 }}>Kết thúc</Text>
-                                <Text style={{ fontSize: 12 }}>{this.state.endTime}</Text>
+                                <Text style={{ fontSize: 14 }}>{this.state.endTime}</Text>
                             </View>
                             <View>
-                                <Image
-                                    style={{ width: 35, height: 35 }}
-                                    source={require('../../../assets/images/lich.png')}
-                                />
                             </View>
                         </TouchableOpacity>
                         <DateTimePickerModal
@@ -257,18 +261,6 @@ class UserOrder extends Component {
 
                 </View>
                 <View style={styles.confix1}>
-                    {/* <View style={styles.confix2}> */}
-                    {/* <Picker
-                            selectedValue={selectedValue}
-                            style={{ height: 45, width: 158 }}
-                            onValueChange={(itemValue) => this.setState({ selectedValue: itemValue })}
-                        >
-                            <Picker.Item label="Hoàn thành" value="0" />
-                            <Picker.Item label="Đã tiếp nhận" value="1" />
-                            <Picker.Item label="Đang xử lí" value="2" />
-                            <Picker.Item label="Đang chuyển" value="3" />
-                            <Picker.Item label="Đã hủy" value="4" />
-                        </Picker> */}
                     <View
                         style={{
 
@@ -282,16 +274,17 @@ class UserOrder extends Component {
                         <DropDownPicker
                             items={[
                                 { label: 'Tất cả', value: '' },
-                                { label: 'Hoàn thành', value: '0' },
                                 { label: 'Đã tiếp nhận', value: '1' },
                                 { label: 'Đang xử lí', value: '2' },
                                 { label: 'Đang chuyển', value: '3' },
+                                { label: 'Đã giao hàng', value: '1' },
+                                { label: 'Hoàn thành', value: '0' },
                                 { label: 'Đã huỷ', value: '4' },
                             ]}
                             defaultValue={selectedValue}
                             placeholder="Tất cả"
-                            containerStyle={{ height: 40 }}
-                            style={{ backgroundColor: '#fafafa', width: sizeWidth(38), borderColor: '#E1AC06', borderWidth: 2 }}
+                            containerStyle={{ height: sizeHeight(5.7) }}
+                            style={{ backgroundColor: '#fafafa', width: sizeWidth(40), borderColor: '#4a8939', borderWidth: 1 }}
                             itemStyle={{
                                 justifyContent: 'flex-start'
                             }}
@@ -315,7 +308,7 @@ class UserOrder extends Component {
                                         STATUS: this.state.selectedValue,
                                         PAGE: 1,
                                         NUMOFPAGE: 50,
-                                        IDSHOP: this.props.idshop.USER_CODE,
+                                        IDSHOP: 'ABC123',
                                     })
                                         .then((res) => {
                                             console.log("khong có dữ liệu", res);
@@ -349,7 +342,7 @@ class UserOrder extends Component {
                         </TouchableOpacity>
                     </View>
                 </View>
-                {loading === false ? <View style={{ zIndex: -1 }}><View style={{ height: 3, backgroundColor: '#B8C4C4', marginTop: sizeHeight(5) }}></View>
+                {loading === false ? <View style={{ zIndex: -1,marginBottom:sizeHeight(50) }}><View style={{ height: 3, backgroundColor: '#B8C4C4', marginTop: sizeHeight(5) }}></View>
                     <Text style={{ fontSize: 18, paddingLeft: 5 }}>Tổng số đơn hàng: <Text style={{ fontWeight: "bold" }}>{Data.length} đơn</Text></Text>
                     <View style={{ height: 3, backgroundColor: '#B8C4C4' }}></View>
                     <ScrollView
@@ -365,6 +358,8 @@ class UserOrder extends Component {
                                 onPress={() => this.props.navigation.navigate("DetailOrder", {
                                     ID: Val.CODE_ORDER,
                                     STATUS: Val.STATUS,
+                                    NAME:'Order',
+                                    CITY:city
                                 })
                                 }
                             >
@@ -430,13 +425,16 @@ const mapStateToProps = (state) => {
 };
 const styles = StyleSheet.create({
     confix: {
-        width: sizeWidth(38),
-        borderColor: '#E1AC06',
+        width: sizeWidth(40),
+        borderColor: '#4a8939',
         paddingLeft: 10,
         paddingRight: 10,
-        borderWidth: 2,
+        borderWidth: 1,
         borderRadius: 5,
-        height: sizeHeight(5),
+        height: sizeHeight(5.7),
+        justifyContent:'center',
+        
+        
     },
     confix1: {
         marginTop: 10,

@@ -37,7 +37,7 @@ export const getDetailOrdered = (data) => {
   });
 };
 
-export const orderProduct  = (data) => {
+export const orderProduct = (data) => {
   return new Promise((resolve, reject) => {
     return api
       .post("order_product3", data, {
@@ -71,6 +71,19 @@ export const updateOrderShop = (data) => {
   return new Promise((resolve, reject) => {
     return api
       .post("update_bill_order_shop", data)
+      .then((result) => {
+        resolve(result);
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  });
+};
+
+export const getConfigCommission = (data) => {
+  return new Promise((resolve, reject) => {
+    return api
+      .post("get_config_commission", data)
       .then((result) => {
         resolve(result);
       })

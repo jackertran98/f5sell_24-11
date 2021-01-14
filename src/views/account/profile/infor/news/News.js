@@ -34,7 +34,7 @@ class News extends Component {
       USERNAME: authUser.USERNAME,
       TYPES: 4,
       CATEGORY: "",
-      IDSHOP: this.props.idshop.USER_CODE,
+      IDSHOP: "ABC123",
     })
       .then((result) => {
         if (result.data.ERROR === "0000") {
@@ -55,6 +55,8 @@ class News extends Component {
   }
   render() {
     const { loading, data } = this.state;
+    const datanew=this.props.data;
+    console.log("data newss",datanew);
     return loading === true ? (
       <Spinner
         visible={loading}
@@ -67,7 +69,7 @@ class News extends Component {
             data={data}
             keyExtractor={(item) => item.ID}
             ListEmptyComponent={() => (
-              <View>
+              <View style={{padding:10}}>
                 <Text>Không có dữ liệu</Text>
               </View>
             )}

@@ -18,7 +18,7 @@ export const UpdateInforAccount = (data) => {
 export const GetListCTV = (data) => {
   return new Promise((resolve, reject) => {
     return api
-      .post("get_list_ctv", data)
+      .post("get_list_ctv_child", data)
       .then((result) => {
         console.log('result__',result);
         resolve(result);

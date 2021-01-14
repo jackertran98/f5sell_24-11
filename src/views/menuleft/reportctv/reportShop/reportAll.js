@@ -23,54 +23,19 @@ class ReportAll extends Component {
     config=(item)=>{
         console.log("item",item);
         if(item==1){
-            return (<ReportYear item={item}/>);
+            return (<ReportYear item={item} navigation={this.props.navigation}/>);
         }else if(item==2){
             return <ReportMonth item={item}/>
         }else{
-            return <ReportDay item={item}/>
+            return <ReportDay item={item} navigation={this.props.navigation}/>
         }
     }
     render() {
         const { selectedValue } = this.state;
-        console.log("thssss", selectedValue);
         return (
             <View >
-                <View style={{ alignItems: 'center', margin: 10 }}>
-                    <Text style={{fontSize:16,marginBottom:10}}>Chọn kiểu thống kê</Text>
-                    <View
-                            style={{
-
-                                // The solution: Apply zIndex to any device except Android
-                                ...(Platform.OS !== 'android' && {
-                                  zIndex: 10
-                                })
-                                
-                              }}
-                        >
-                        <DropDownPicker
-                            items={[
-                                { label: 'Báo cáo năm', value: '1'},
-                                { label: 'Báo cáo tháng', value: '2'},
-                                { label: 'Báo cáo ngày', value: '3'},
-                                
-                            ]}
-                            defaultValue={selectedValue}
-                            placeholder="Trạng thái"
-                            containerStyle={{ height: 40 }}
-                            style={{ backgroundColor: '#fafafa',width:sizeWidth(50),borderColor:'#E1AC06',borderWidth:2}}
-                            itemStyle={{
-                                justifyContent: 'flex-start'
-                            }}
-                            dropDownStyle={{ backgroundColor: '#fafafa',width:sizeWidth(50)}}
-                            onChangeItem={item => this.setState({
-                                selectedValue: item.value
-                            })}
-                        />
-                        </View>
-                </View>
-                <View style={{ height: 5, backgroundColor: '#CCCECE',margin:10,zIndex:-1 }}></View>
                 <View style={{zIndex:-1}}>
-                    {this.config(selectedValue)}
+                    {this.config(1)}
                 </View>
             </View>
 

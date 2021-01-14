@@ -44,7 +44,16 @@ class FullItem extends Component {
             data:arry
         })
     };
-
+    checkTime = (a, b) => {
+        var start = a;
+        var end = b;
+        var datePart1 = start.split("/");
+        var datePart2 = end.split("/");
+    
+        var dateObject1 = new Date(+datePart1[2], datePart1[1] - 1, +datePart1[0]);
+        var dateObject2 = new Date(+datePart2[2], datePart2[1] - 1, +datePart2[0]);
+        return dateObject2 - dateObject1;
+      }
 
     render() {
         const { loading, refreshing, search,data } = this.state;

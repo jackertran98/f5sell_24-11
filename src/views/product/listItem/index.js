@@ -1,4 +1,4 @@
-import React, { Component, PureComponent,useCallback } from "react";
+import React, { Component, PureComponent, useCallback } from "react";
 import {
   View,
   Text,
@@ -16,6 +16,7 @@ import {
   Linking,
   Alert,
 } from "react-native";
+import {AlertCommon} from "../../../components/error";
 import { _retrieveData } from "../../../utils/asynStorage";
 import { HeaderLeftComponet } from "../../../components/header"
 import IconComponets from "../../../components/icon";
@@ -60,7 +61,7 @@ class ListProducts extends PureComponent {
     getListSubProducts({
       USERNAME: this.props.username,
       ID_PARENT: '',
-      IDSHOP: this.props.idshop.USER_CODE,
+      IDSHOP: "ABC123",
       SEARCH_NAME: text,
     })
       .then((result) => {
@@ -76,13 +77,13 @@ class ListProducts extends PureComponent {
             }
           );
         } else {
-          
+
           this.setState(
             {
               data: [],
             }
           );
-         
+
         }
       })
       .catch((error) => {
@@ -93,7 +94,7 @@ class ListProducts extends PureComponent {
     getListProduct1({
       USERNAME: this.props.username,
       ID_PARENT: '',
-      IDSHOP: this.props.idshop.USER_CODE,
+      IDSHOP: "ABC123",
     })
       .then((res) => {
         if (res.data.ERROR == "0000") {
@@ -109,14 +110,14 @@ class ListProducts extends PureComponent {
     getListSubProducts({
       USERNAME: this.props.username,
       ID_PARENT: '',
-      IDSHOP: this.props.idshop.USER_CODE,
+      IDSHOP: "ABC123",
       SEARCH_NAME: this.state.search,
     })
       .then((result) => {
+        console.log('subproduct========',result);
         if (result.data.ERROR == "0000") {
           for (let i = 0; i < result.data.DETAIL.length; i++) {
             result.data.DETAIL[i].data = result.data.DETAIL[i].INFO;
-
             //resultArray.push(result.data.DETAIL[i]);
           }
           this.setState(
@@ -127,7 +128,7 @@ class ListProducts extends PureComponent {
               this.setState({ loading: false });
             }
           );
-        } else {
+        } else { 
           this.setState({ loading: false }, () =>
             AlertCommon("Thông báo", result.data.RESULT, () => null)
           );
@@ -137,12 +138,20 @@ class ListProducts extends PureComponent {
         this.setState({ loading: false });
       });
   }
+  checkTime = (a, b) => {
+    var start = a;
+    var end = b;
+    var datePart1 = start.split("/");
+    var datePart2 = end.split("/");
+
+    var dateObject1 = new Date(+datePart1[2], datePart1[1] - 1, +datePart1[0]);
+    var dateObject2 = new Date(+datePart2[2], datePart2[1] - 1, +datePart2[0]);
+    return dateObject2 - dateObject1;
+  }
   handleScreen = (text, title, type) => {
     const { navigation } = this.props;
     navigation.navigate(text, { TITLE: title, TYPE: type });
-
   };
-
   render() {
     const {
       refreshing,
@@ -155,15 +164,16 @@ class ListProducts extends PureComponent {
       countNotify
     } = this.props;
     const { Data, loading, Rose, dataList, open, search, data, open2, value } = this.state;
+    console.log("auth",this.props.authUser);
     return (
       <View style={{ marginBottom: sizeHeight(5) }}>
-        <View style={{ flexDirection: 'row', height: sizeHeight(10), backgroundColor: '#E1AC06', justifyContent: 'space-between', alignItems: 'center' }}>
+        <View style={{ flexDirection: 'row', paddingTop: sizeHeight(5), height: sizeHeight(12), backgroundColor: '#E1AC06', justifyContent: 'space-between', alignItems: 'center' }}>
           <TouchableOpacity onPress={() => navigation.openDrawer()}>
             <Image
               source={require('../../../assets/images/list.png')}
               style={{
-                width: 30,
-                height: 30,
+                width: sizeFont(7.5),
+                height: sizeFont(7.5),
                 marginLeft: 12,
                 marginRight: 11
               }}
@@ -183,10 +193,10 @@ class ListProducts extends PureComponent {
               backgroundColor: 'white'
             }}
           />
-          <View style={{ flexDirection: 'row-reverse' }}>
+          <View style={{ flexDirection: 'row-reverse',alignItems:'center',justifyContent:'center' }}>
             <View>
               <TouchableOpacity
-                style={{ flexDirection: "row", marginRight: sizeWidth(2) }}
+                style={{ flexDirection: "row"}}
                 onPress={() =>
                   navigation.navigate("Carts", {
                     NAME: "Product",
@@ -222,7 +232,7 @@ class ListProducts extends PureComponent {
             <View>
               <HeaderLeftComponet
                 navigation={navigation}
-                onPress={() => navigation.navigate("Thông báo", {
+                onPress={() => navigation.navigate("notiProduct", {
                   NAME: 'Product',
                 })}
                 name="bell"
@@ -243,14 +253,14 @@ class ListProducts extends PureComponent {
                 }}>99+</Text>}
               </View>}
             </View>
-            <TouchableOpacity 
-                onPress={()=>Linking.openURL('http://google.com')}
-                
+            <TouchableOpacity
+              onPress={() => Linking.openURL('http://google.com')}
+
             >
               <View style={{ justifyContent: 'center', alignItems: 'center' }}>
                 <Image
                   source={require("../../../assets/images/mess.png")}
-                  style={{ width: 30, height: 30, justifyContent: 'center', alignItems: 'center', marginLeft: sizeWidth(1) }}
+                  style={{ width: 25, height: 25, justifyContent: 'center', alignItems: 'center', marginLeft: sizeWidth(1) }}
                 />
               </View>
             </TouchableOpacity >
@@ -261,7 +271,7 @@ class ListProducts extends PureComponent {
             <TouchableHighlight onPress={() => {
               this.setState({ open: !this.state.open })
             }}>
-              <View style={{ flexDirection: 'row', height: sizeHeight(4.5), borderRadius: 5, backgroundColor: '#149CC6', color: 'white', fontSize: 16, width: sizeWidth(98), paddingLeft: 10, justifyContent: 'space-between', alignItems: 'center' }}>
+              <View style={{ flexDirection: 'row', height: sizeHeight(4.5), borderRadius: 5, backgroundColor: '#149CC6', color: 'white', width: sizeWidth(98), paddingLeft: 10, justifyContent: 'space-between', alignItems: 'center' }}>
                 <Text
                   style={{ color: 'white' }}
                 >
@@ -297,6 +307,10 @@ class ListProducts extends PureComponent {
           </View>
 
         </View>
+
+
+
+        
         <View style={{ marginTop: sizeHeight(1) }}>
           <Animated.SectionList
             onScroll={Animated.event(
@@ -344,6 +358,10 @@ class ListProducts extends PureComponent {
                             })
                           }
                         >
+                               {item.END_PROMOTION && this.checkTime(item.START_PROMOTION, item.END_PROMOTION) >= 0 ?
+                            <View style={{ position: 'absolute', right: 5, top: 5, width: sizeWidth(10), height: sizeHeight(2.5),backgroundColor:'red', justifyContent: 'center', alignItems: 'center',zIndex:100,borderRadius:2 }}>
+                              <Text style={{ fontSize: sizeFont(3), color: '#fff',fontSize:sizeFont(2) }}>-{numeral((item.PRICE - item.PRICE_PROMOTION) / item.PRICE * 100).format('0.00')}%</Text>
+                            </View> : null}
                           <View
                             style={{
                               width: "100%",
@@ -360,13 +378,23 @@ class ListProducts extends PureComponent {
                           </View>
                           <Text style={styles.textName}>
                             {_.truncate(item.PRODUCT_NAME, {
-                              length: 12,
+                              length: 20,
                             })}{" "}
                           </Text>
-                          <Text style={styles.textPrice}>
+
+                          {item.END_PROMOTION && this.checkTime(item.START_PROMOTION, item.END_PROMOTION) >=0 ? <View>
+                            <View style={styles.textPrice1}>
+                              <View style={{flexDirection:'row',alignItems:'center',alignItems:'center'}}>
+                                <Text style={styles.textPrice}>{numeral(item.PRICE_PROMOTION).format("0,0")} đ</Text>
+                                <Text style={{ textDecorationLine: 'line-through', color: 'gray', fontSize: sizeFont(3),marginLeft:sizeWidth(1)}}>{numeral(item.PRICE).format("0,0")} đ</Text>
+                              </View>
+                              {this.props.authUser.GROUPS == 8 || this.props.authUser.GROUPS == undefined ? null : <Text style={{ color: '#3399FF', fontSize: sizeFont(3.5), paddingBottom: 5 }}>HH: {numeral(item.COMISSION_PRODUCT * item.PRICE_PROMOTION * 0.01).format("0,0")}đ ({item.COMISSION_PRODUCT}%)</Text>}
+                            </View>
+                          </View> : <View style={{ flexDirection: 'column' }}><Text style={styles.textPrice}>
                             {numeral(item.PRICE).format("0,0")} đ
                           </Text>
-                          {this.props.authUser.GROUPS == 8 || this.props.authUser.GROUPS == undefined ? null : <Text style={{ color: '#3399FF', fontSize: sizeFont(3.5), paddingBottom: 5 }}>HH: {numeral(item.COMISSION_PRODUCT * item.PRICE * 0.01).format("0,0")}đ ({item.COMISSION_PRODUCT}%)</Text>}
+                              {this.props.authUser.GROUPS == 8 || this.props.authUser.GROUPS == undefined ? null : <Text style={{ color: '#3399FF', fontSize: sizeFont(3.5), paddingBottom: 5 }}>HH: {numeral(item.COMISSION_PRODUCT * item.PRICE * 0.01).format("0,0")}đ ({item.COMISSION_PRODUCT}%)</Text>}
+                            </View>}
                         </TouchableOpacity>
                       );
                     }}

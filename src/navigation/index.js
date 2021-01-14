@@ -5,10 +5,13 @@ import {
   TransitionSpecs,
   CardStyleInterpolators,
 } from "@react-navigation/stack";
+import {
+  Image
+} from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createDrawerNavigator } from '@react-navigation/drawer';
-import Icon from "react-native-vector-icons/FontAwesome5Pro";
+import Icon from "react-native-vector-icons/FontAwesome5";
 import MyHomeStack from "./homeNavigation";
 import OrderStack from "./orderNavigation";
 import MyProductStack from "./productNavigation";
@@ -56,35 +59,60 @@ const AppStack = (props) => {
       initialRouteName="Home"
       screenOptions={({ route }) => ({
         tabBarIcon: ({ focused, color, size }) => {
-          let iconName;
           if (route.name == "Home") {
+            const image = focused
+              ? require('../assets/images/homeactive.png')
+              : require('../assets/images/home.png')
             return (
-              <Icon name={"home"} size={sizeFont(6)} color={color} solid />
+              <Image
+                source={image}
+                style={{ width: 25, height: 25 }}
+              />
             );
           } else if (route.name == "order") {
+            const image = focused
+              ? require('../assets/images/orderactive.png')
+              : require('../assets/images/order.png')
             return (
-              <Icon name={"shopping-bag"} size={sizeFont(6)} color={color} solid />
+              <Image
+                source={image}
+                style={{ width: 25, height: 25 }}
+              />
             );
           }
-          else if (route.name == "product")
+          else if (route.name == "product"){
+            const image = focused
+              ? require('../assets/images/product1active.png')
+              : require('../assets/images/product1.png')
             return (
-              <Icon name={"dropbox"} size={sizeFont(6)} color={color} />
+              <Image
+                source={image}
+                style={{ width: 25, height: 25 }}
+              />
             );
-          else if (route.name == "rose")
+
+          }else if (route.name == "rose"){
+            const image = focused
+              ? require('../assets/images/roseactive.png')
+              : require('../assets/images/rose.png')
             return (
-              <Icon name={"wallet"} size={sizeFont(6)} color={color} />
+              <Image
+                source={image}
+                style={{ width: 25, height: 25 }}
+              />
             );
+          }
         },
       })}
       tabBarOptions={{
         activeTintColor: "#E1AC06",
         inactiveTintColor: "#969696",
         tabStyle: {
-          paddingTop:10,
+          paddingTop: 10,
           backgroundColor: "#fff",
         },
         labelStyle: {
-          flex:1,
+          flex: 1,
           fontSize: isIphoneX() ? sizeFont(3) : sizeFont(3),
         },
         labelPosition: "below-icon",

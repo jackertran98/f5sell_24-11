@@ -141,7 +141,7 @@ class UpdateAccount extends Component {
       TENTK: null,
       TENNH: null,
       AVATAR: imageAvatar,
-      IDSHOP: this.props.idshop.USER_CODE,
+      IDSHOP: "ABC123",
       CMT: null,
       IMG1: null,
       IMG2: null,
@@ -158,7 +158,7 @@ class UpdateAccount extends Component {
             () => {
               this.props
                 .GetProfile({
-                  IDSHOP: this.props.idshop.USER_CODE,
+                  IDSHOP: "ABC123",
                   USER_CTV: this.props.authUser.USERNAME,
                   USERNAME: this.props.authUser.USERNAME,
                 })

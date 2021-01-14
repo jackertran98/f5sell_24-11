@@ -69,7 +69,7 @@ class Subchilditem extends Component {
       END_TIME: this.state.endTime,
       PAGE: 1,
       NUMOFPAGE: 10,
-      IDSHOP: this.props.idshop.USER_CODE,
+      IDSHOP: "ABC123",
     })
       .then((res) => {
         if (res.data.ERROR == "0000") {
@@ -91,7 +91,7 @@ class Subchilditem extends Component {
     GetCTVDetail({
       USERNAME: username,
       USER_CTV: ID_NAME,
-      IDSHOP: this.props.idshop.USER_CODE
+      IDSHOP: "ABC123"
     })
       .then((result) => {
         if (result.data.ERROR === "0000") {
@@ -122,7 +122,7 @@ class Subchilditem extends Component {
           <Text style={{ fontSize: 16 }}>Email: {data.EMAIL}</Text>
           <View style={{ height: 50, width: '100%' }}>
             <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}>
-              <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', }}>
+              <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center',justifyContent:'center' }}>
                 <Text style={{ fontSize: 18 }}>Số dư hoa hồng hiện tại: </Text>
                 <Text style={{ fontSize: 22, color: '#FF5C03', alignItems: 'center', alignSelf: 'center', fontWeight: 'bold', paddingLeft: 5 }}>
                   {numeral(data.BALANCE).format("0,0")}đ
@@ -135,7 +135,7 @@ class Subchilditem extends Component {
         </View>
         <View>
           <View>
-            <View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: 30 }}>
+            <View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: 30,alignItems:'center' }}>
               <View style={styles.confix}>
                 <TouchableOpacity
                   onPress={this.showDatePicker1}
@@ -153,7 +153,7 @@ class Subchilditem extends Component {
               </View>
 
               <Image
-                style={{ width: 50, height: 50, marginRight: 40 }}
+                style={{ width: 40, height: 40, marginRight: 40 }}
                 source={require('../../../assets/images/lich.png')}
               />
 
@@ -174,7 +174,7 @@ class Subchilditem extends Component {
               </View>
 
               <Image
-                style={{ width: 50, height: 50 }}
+                style={{ width: 40, height: 40 }}
                 source={require('../../../assets/images/lich.png')}
               />
             </View>
@@ -189,7 +189,7 @@ class Subchilditem extends Component {
                       END_TIME: this.state.endTime,
                       PAGE: 1,
                       NUMOFPAGE: 10,
-                      IDSHOP: this.props.idshop.USER_CODE,
+                      IDSHOP: "ABC123",
                     })
                       .then((res) => {
                         console.log("search nè", res)
@@ -324,8 +324,8 @@ const styles = StyleSheet.create({
     borderColor: '#E1AC06',
     paddingLeft: 10,
     paddingRight: 10,
-    borderWidth: 2,
-    borderRadius: 15,
+    borderWidth: 1,
+    borderRadius: 5,
 
   },
 

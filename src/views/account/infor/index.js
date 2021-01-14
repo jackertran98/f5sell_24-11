@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { View, Text, TouchableOpacity } from "react-native";
-import FontAwesome5Pro from "react-native-vector-icons/FontAwesome5Pro";
+import FontAwesome5Pro from "react-native-vector-icons/FontAwesome5";
 import IconComponets from "../../../components/icon";
 import {
   sizeFont,

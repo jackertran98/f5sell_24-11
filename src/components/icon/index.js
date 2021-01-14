@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import FontAwesome5Pro from "react-native-vector-icons/FontAwesome5Pro";
+import FontAwesome5Pro from "react-native-vector-icons/FontAwesome5";
 import PropTypes from "prop-types";
 export default class IconComponets extends Component {
   render() {

@@ -16,7 +16,6 @@ import {
 } from "react-native";
 import { SliderBox } from "react-native-image-slider-box";
 import IconComponets from "../../../../components/icon";
-import Gallery from 'react-native-image-gallery';
 import {
   sizeFont,
   sizeWidth,
@@ -40,7 +39,8 @@ import FooterAdmin from "../footeradmin";
 import _ from "lodash";
 import { IGNORED_TAGS } from "react-native-render-html/src/HTMLUtils";
 import { GetProperties } from "../../../../service/order";
-import ImageViewer from 'react-native-image-zoom-viewer';
+import Properti from "./properti";
+
 var numeral = require("numeral");
 const tags = _.without(
   IGNORED_TAGS,
@@ -92,6 +92,7 @@ class DetailProducts extends Component {
     super(props);
     this.state = {
       count: 1,
+      active: false,
       activeTab: 1,
       cartLength: this.props.listItem.length,
       loading: true,
@@ -121,7 +122,7 @@ class DetailProducts extends Component {
     const { ID_PRODUCT } = this.props.route.params;
     await getDetails({
       USERNAME: status === "" ? null : authUser.USERNAME,
-      IDSHOP: this.props.idshop.USER_CODE,
+      IDSHOP: "ABC123",
       IDPRODUCT: ID_PRODUCT,
     })
       .then((result) => {
@@ -329,10 +330,11 @@ class DetailProducts extends Component {
     return valiText;
   }
   render() {
-    const { count, activeTab, cartLength, loading, data, inside, properties, setSelectedValue } = this.state;
+    const { count, activeTab, active, cartLength, loading, data, inside, properties, setSelectedValue } = this.state;
     const { status, authUser } = this.props;
     console.log("data home detail", data);
     console.log("data home setSelectedValue", setSelectedValue);
+    console.log("dây là properties", properties)
     const images = [{
       // Simplest usage.
       url: 'https://avatars2.githubusercontent.com/u/7970947?v=3&s=460',
@@ -398,7 +400,7 @@ class DetailProducts extends Component {
               <View style={{ margin: sizeWidth(2), }}>
                 {data.WARRANTY != null ? <Text>Bảo hành {data.WARRANTY} tháng</Text> : null}
               </View>
-              {properties ? <View style={{ paddingLeft: 10, marginTop: 10 }}>
+              {/* {properties ? <View style={{ paddingLeft: 10, marginTop: 10 }}>
                 {properties != [] ? properties.map((val, key) => {
                   return (
                     <View key={key} style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 5 }}>
@@ -423,8 +425,10 @@ class DetailProducts extends Component {
                     </View>
                   )
                 }) : null}
+              </View> : null} */}
+              {properties ? <View>
+                <Properti data={properties} basedata={data}/>
               </View> : null}
-
               <View style={{ paddingLeft: 10, flexDirection: 'row' }}>
                 <Image
                   source={require('../../../../assets/images/ship.png')}
@@ -433,13 +437,11 @@ class DetailProducts extends Component {
                 <TouchableOpacity
                   onPress={() =>
                     this.props.navigation.navigate("Chi tiết chính sách", {
-                      item: '159',
+                      item: '566',
                     })
                   }
                 >
-                  <Text style={{ fontSize: 17, width: sizeWidth(77) }}>Chính sách vận chuyển:
-                  ...........................................................................
-                  ............................................</Text>
+                  <Text style={{ fontSize: 17, width: sizeWidth(77), marginLeft: 10, fontStyle: 'italic', textDecorationLine: 'underline' }}>Chính sách vận chuyển</Text>
                 </TouchableOpacity>
               </View>
               <View style={{ marginTop: 10, marginBottom: 10, justifyContent: 'center', alignItems: 'center' }}>
@@ -449,7 +451,6 @@ class DetailProducts extends Component {
                       flexDirection: "row",
                       height: isIphoneX() ? sizeHeight(6) : sizeHeight(5.5),
                       width: sizeWidth(90),
-
                     }}
                   >
                     <TouchableOpacity
@@ -528,13 +529,13 @@ class DetailProducts extends Component {
               </View>
             </View> :
               <View>
-                <View style={{padding:10}}>
-                   <Text style={{fontStyle:'italic'}}>* Hướng dẫn quảng cáo sản phẩm:</Text>
-                   <Text style={{fontStyle:'italic'}}>- Bấm vào nút Chia sẻ Facebook để đẩy toàn bộ hình ảnh/ video sản phẩm sang Facebook của bạn. Phần text đã được copy sẵn, bạn chỉ việc dán vào nội dung bài viết</Text>
-                   <Text style={{fontStyle:'italic'}}>- Bấm vào nút Tải ảnh về máy để toàn bộ ảnh/video sản phẩm về máy của bạn để đăng lên các nền tảng khác</Text>
-                   <Text style={{fontStyle:'italic'}}>- Bấm vào nút Copy link sản phẩm để gửi link sản phẩm này cho khách hàng của bạn qua Zalo, Messenger, ...</Text>
-                   <Text style={{fontStyle:'italic'}}>- Bấm vào nút Copy link danh mục để gửi link bao gồm tất cả các sản phẩm cùng loại với sản phẩm này cho khách hàng chọn qua Zalo, Messenger, ...</Text>
-                   <Text style={{fontStyle:'italic'}}>- Bấm vào nút Copy text giới thiệu để copy bài viết giới thiệu sản phẩm để dán vào Zalo, Messenger, ...</Text>
+                <View style={{ padding: 10 }}>
+                  <Text style={{ fontStyle: 'italic' }}>* Hướng dẫn quảng cáo sản phẩm:</Text>
+                  <Text style={{ fontStyle: 'italic' }}>- Bấm vào nút Chia sẻ Facebook để đẩy toàn bộ hình ảnh/ video sản phẩm sang Facebook của bạn. Phần text đã được copy sẵn, bạn chỉ việc dán vào nội dung bài viết</Text>
+                  <Text style={{ fontStyle: 'italic' }}>- Bấm vào nút Tải ảnh về máy để toàn bộ ảnh/video sản phẩm về máy của bạn để đăng lên các nền tảng khác</Text>
+                  <Text style={{ fontStyle: 'italic' }}>- Bấm vào nút Copy link sản phẩm để gửi link sản phẩm này cho khách hàng của bạn qua Zalo, Messenger, ...</Text>
+                  <Text style={{ fontStyle: 'italic' }}>- Bấm vào nút Copy link danh mục để gửi link bao gồm tất cả các sản phẩm cùng loại với sản phẩm này cho khách hàng chọn qua Zalo, Messenger, ...</Text>
+                  <Text style={{ fontStyle: 'italic' }}>- Bấm vào nút Copy text giới thiệu để copy bài viết giới thiệu sản phẩm để dán vào Zalo, Messenger, ...</Text>
                 </View>
                 <View style={{ justifyContent: 'center', alignItems: 'center' }}>
                   <TouchableOpacity
@@ -606,142 +607,6 @@ class DetailProducts extends Component {
                 </View>
 
               </View>
-              // <View>
-              //   <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
-              //     <TouchableOpacity
-              //       onPress={() => this.setState({ inside: true })}
-              //       style={{
-              //         flexDirection: 'row', width: sizeWidth(45), height: sizeHeight(7.5), backgroundColor: `${color}`,
-              //         alignItems: 'center', justifyContent: 'center', borderRadius: 5
-              //       }}
-              //     >
-              //       <View style={{
-              //         borderRightColor: `${colorBor}`, borderRightWidth: 1, height: sizeHeight(7.5), alignItems: 'center',
-              //         justifyContent: 'center'
-              //       }}>
-              //         {inside === false ? <Image
-              //           source={require('../../../../assets/images/content.png')}
-              //           style={{ width: 35, height: 35, marginRight: 5 }}
-              //         /> : <Image
-              //             source={require('../../../../assets/images/content_active.png')}
-              //             style={{ width: 35, height: 35, marginRight: 5 }}
-              //           />}
-              //       </View>
-              //       <Text style={{ color: `${colorText}`, paddingLeft: 5 }}>Nội dung affaliate</Text>
-              //     </TouchableOpacity>
-              //     <TouchableOpacity
-              //       onPress={() => this.setState({ inside: false })}
-              //       style={{ flexDirection: 'row', width: sizeWidth(45), height: sizeHeight(7.5), backgroundColor: `${color2}`, alignItems: 'center', justifyContent: 'center', borderRadius: 5 }}
-              //     >
-              //       <View style={{
-              //         borderRightColor: `${colorBor1}`, borderRightWidth: 1, height: sizeHeight(7.5), alignItems: 'center',
-              //         justifyContent: 'center'
-              //       }}>
-              //         {inside === true ? <Image
-              //           source={require('../../../../assets/images/fb.png')}
-              //           style={{ width: 35, height: 35, marginRight: 5 }}
-              //         /> : <Image
-              //             source={require('../../../../assets/images/fb_active.png')}
-              //             style={{ width: 35, height: 35, marginRight: 5 }}
-              //           />}
-              //       </View>
-              //       <Text style={{ color: `${colorText1}`, paddingLeft: 5 }}>Chia sẻ facebook</Text>
-              //     </TouchableOpacity>
-              //   </View>
-              //   <View style={{ flexDirection: 'row', padding: 10 }}>
-              //     <View style={{ width: sizeWidth(45), height: 5, backgroundColor: `${backGround}` }}></View>
-              //     <View style={{ width: sizeWidth(50), height: 5, backgroundColor: `${backGround1}` }}></View>
-              //   </View>
-              //   <View style={{ marginBottom: 20, paddingLeft: 18 }}>
-              //     {inside ? <View>
-              //       <View>
-              //         <HTML
-              //           html={
-              //             data.TRAINING === null
-              //               ? "<h1>Không có dữ liệu</h1>"
-              //               : data.TRAINING
-              //           }
-              //         />
-              //       </View>
-              //       <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
-              //         <TouchableOpacity
-              //           onPress={() => {
-              //             this.onShare();
-              //           }}
-              //           style={{ backgroundColor: '#E1AC06', width: sizeWidth(35), borderRadius: 5, padding: 7 }}
-              //         >
-              //           <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around' }}>
-              //             <Image
-              //               source={require('../../../../assets/images/share.png')}
-              //               style={{ width: 35, height: 35 }}
-              //             />
-              //             <Text style={{ color: 'white' }}>Chia sẻ link</Text>
-              //           </View>
-
-              //         </TouchableOpacity>
-
-              //         <TouchableOpacity
-              //           onPress={() => {
-              //             this.copyIt();
-              //           }}
-              //           style={{ backgroundColor: '#222220', width: sizeWidth(35), borderRadius: 5, padding: 7 }}
-              //         >
-              //           <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around' }}>
-              //             <Image
-              //               source={require('../../../../assets/images/copy.png')}
-              //               style={{ width: 35, height: 35 }}
-              //             />
-              //             <Text style={{ color: 'white' }}>Copy link</Text>
-              //           </View>
-
-              //         </TouchableOpacity>
-              //       </View>
-              //     </View> : <View>
-              //         <Text >Nội dung bán hàng</Text>
-              //         <View>
-              //           <HTML
-              //             html={
-              //               data.CONTENT_FB === null
-              //                 ? "<h1>Không có dữ liệu</h1>"
-              //                 : data.CONTENT_FB
-              //             }
-              //           />
-              //         </View>
-              //         <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
-              //           <TouchableOpacity
-              //             onPress={() => {
-              //               this.onShareFaceBook();
-              //             }}
-              //             style={{ backgroundColor: '#E1AC06', width: sizeWidth(35), borderRadius: 5, padding: 7 }}
-              //           >
-              //             <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around' }}>
-              //               <Image
-              //                 source={require('../../../../assets/images/share.png')}
-              //                 style={{ width: 35, height: 35 }}
-              //               />
-              //               <Text style={{ color: 'white' }}>Chia sẻ</Text>
-              //             </View>
-
-              //           </TouchableOpacity>
-
-              //           <TouchableOpacity
-
-              //             style={{ backgroundColor: '#222220', width: sizeWidth(35), borderRadius: 5, padding: 7 }}
-              //           >
-              //             <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around' }}>
-              //               <Image
-              //                 source={require('../../../../assets/images/dow.png')}
-              //                 style={{ width: 35, height: 35 }}
-              //               />
-              //               <Text style={{ color: 'white' }}>Tải về máy</Text>
-              //             </View>
-
-              //           </TouchableOpacity>
-              //         </View>
-              //       </View>
-              //     }
-              //   </View>
-              // </View>
             }
           </ScrollView>
 

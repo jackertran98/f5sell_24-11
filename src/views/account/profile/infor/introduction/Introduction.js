@@ -33,7 +33,7 @@ class Introduction extends Component {
       USERNAME: authUser.USERNAME,
       TYPES: 1,
       CATEGORY: "",
-      IDSHOP: this.props.idshop.USER_CODE,
+      IDSHOP: "ABC123",
     })
       .then((result) => {
         if (result.data.ERROR === "0000") {

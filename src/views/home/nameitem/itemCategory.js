@@ -9,7 +9,7 @@ import {
   TextInput,
 } from "react-native";
 
-import FontAwesome from "react-native-vector-icons/FontAwesome5Pro";
+import FontAwesome from "react-native-vector-icons/FontAwesome5";
 import { COLOR } from "../../../utils/color/colors";
 import {
   getParentsItem,
@@ -48,8 +48,8 @@ class Item extends PureComponent {
     this.setState({ expand_child: !expand_child, loading: true }, () => {
       getParentsItem({
         ID_PARENT: item.ID,
-        IDSHOP: this.props.idshop.USER_CODE,
-        IDUSER: this.props.idshop.USER_CODE,
+        IDSHOP: "ABC123",
+        IDUSER: "ABC123",
       })
         .then((result) => {
           if (result.data.ERROR == "0000") {
@@ -177,8 +177,8 @@ class ItemCategory extends React.PureComponent {
     this.setState({ loading: true }, () => {
       getParentsItem({
         ID_PARENT: item.ID,
-        IDSHOP: this.props.idshop.USER_CODE,
-        IDUSER: this.props.idshop.USER_CODE,
+        IDSHOP: "ABC123",
+        IDUSER: "ABC123",
       })
         .then((result) => {
           if (result.data.ERROR == "0000") {
@@ -227,7 +227,7 @@ class ItemCategory extends React.PureComponent {
         PARENTID: item.ID_PARENT,
         USERNAME: authUser.USERNAME,
         USER_CODE: authUser.USER_CODE,
-        IDSHOP: this.props.idshop.USER_CODE,
+        IDSHOP: "ABC123",
       })
         .then(async (result) => {
           if (result.data.ERROR === "0000") {
@@ -246,7 +246,7 @@ class ItemCategory extends React.PureComponent {
     deleteProductCategory({
       USERNAME: authUser.USERNAME,
       USER_CODE: authUser.USER_CODE,
-      IDSHOP: this.props.idshop.USER_CODE,
+      IDSHOP: "ABC123",
       ID: null,
     })
       .then((result) => {

@@ -51,31 +51,33 @@ class HeaderHome extends Component {
         <StatusBar
           barStyle={"light-content"}
           backgroundColor={COLOR.HEADER}
-          //translucent
+        //translucent
         />
-        {authUser.GROUPS==='3'?(
-        <View style={{ margin: sizeHeight(1) }} >
-          <View style={{ height: 100, width: '100%' }}>
-            <Text style={{ height: sizeHeight(4.5), borderRadius: 5, backgroundColor: '#222220', color: 'white', textAlign: 'center', paddingTop: 8, fontSize: 16 }}>
-              Số dư hoa hồng hiện tại
+        {authUser.GROUPS === '3' ? (
+          <View style={{ margin: sizeHeight(1) }} >
+            <View style={{ height: 100, width: '100%' }}>
+              <View style={{justifyContent:'center',alignItems:'center',height: sizeHeight(4.5),width:sizeWidth(98),borderRadius: 25, backgroundColor: '#222220', }}>  
+                <Text style={{color: 'white', fontSize: 16 }}>
+                  Số dư hoa hồng hiện tại
                 </Text>
-            <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}>
-              <View style={{ flex: 1, flexDirection: 'row' }}>
-                <Image
-                  source={require('../../../assets/images/monney.png')}
-                  style={{
-                    height: 40,
-                    width: 40
-                  }}
-                />
-                <Text style={{ fontSize: 20, color: '#FF5C03', alignItems: 'center', fontWeight: 'bold', paddingTop: 8, paddingLeft: 5 }}>
-                  5.000.000 đ
+              </View>
+              <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}>
+                <View style={{ flex: 1, flexDirection: 'row' }}>
+                  <Image
+                    source={require('../../../assets/images/monney.png')}
+                    style={{
+                      height: 40,
+                      width: 40
+                    }}
+                  />
+                  <Text style={{ fontSize: 20, color: '#FF5C03', alignItems: 'center', fontWeight: 'bold', paddingTop: 8, paddingLeft: 5 }}>
+                    5.000.000 đ
                  </Text>
+                </View>
               </View>
             </View>
-          </View>
-        </View>):null}
-        <View style={{height:5,backgroundColor:'#E1AC06'}}></View>
+          </View>) : null}
+        <View style={{ height: 5, backgroundColor: '#E1AC06' }}></View>
       </View>
     );
   }

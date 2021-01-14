@@ -76,8 +76,10 @@ export function isVietnamesePhoneNumber(number) {
 }
 
 export const checkFullName = (inputtxt) => {
+  var str = inputtxt.replace(/à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ/g,"a"); 
   var letterNumber = /^[0-9a-zA-Z\s]+$/;
-  if (inputtxt.match(letterNumber)) {
+  console.log("strrrrrr",str);
+  if (str.match(letterNumber)) {
     return true;
   } else return false;
 };

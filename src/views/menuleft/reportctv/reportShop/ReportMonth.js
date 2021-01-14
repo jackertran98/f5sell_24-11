@@ -23,7 +23,7 @@ class ReportMonth extends Component {
             YEAR: this.state.selectedValue,
             MONTH: '',
             REPORT_TYPE: this.props.item,
-            IDSHOP: this.props.idshop.USER_CODE
+            IDSHOP: "ABC123"
         })
             .then((result) => {
                 this.setState({

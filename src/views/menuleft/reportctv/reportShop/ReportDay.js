@@ -13,7 +13,7 @@ class ReportDay extends Component {
         super(props)
         this.state = {
             data: [],
-            selectMonth: '10',
+            selectMonth: '1',
             selectYear: '2020',
         }
     }
@@ -23,7 +23,7 @@ class ReportDay extends Component {
             YEAR: this.state.selectYear,
             MONTH: this.state.selectMonth,
             REPORT_TYPE: '3',
-            IDSHOP: this.props.idshop.USER_CODE,
+            IDSHOP: "ABC123",
         })
             .then((result) => {
                 if (result.data.ERROR == '0000') {
@@ -36,6 +36,61 @@ class ReportDay extends Component {
                 }
             })
     }
+    allData = (a) => {
+        const { data } = this.state;
+        var sumOrder = 0;
+        var sumMonney = 0;
+        var sumCommitsion = 0;
+        var sumTT = 0;
+
+
+        
+            for (var i = 0; i < data.length; i++) {
+                sumOrder = sumOrder + data[i].TOTAL_ORDER;
+            }
+            return sumOrder;
+       
+
+    }
+    allData1 = () => {
+        const { data } = this.state;
+        var sumOrder = 0;
+        var sumMonney = 0;
+        var sumCommitsion = 0;
+        var sumTT = 0;
+
+
+        for (let i = 0; i < data.length; i++) {
+            sumMonney += data[i].TOTAL_MONEY;
+        }
+        return sumMonney;
+
+    }
+    allData3 = () => {
+        const { data } = this.state;
+        var sumOrder = 0;
+        var sumMonney = 0;
+        var sumCommitsion = 0;
+        var sumTT = 0;
+
+
+        for (let i = 0; i < data.length; i++) {
+            sumCommitsion += data[i].TOTAL_COMMISSION;
+        }
+        return sumCommitsion;
+
+    }
+    allData4 = () => {
+        const { data } = this.state;
+        var sumTT = 0;
+
+
+        for (let i = 0; i < data.length; i++) {
+            sumTT += data[i].TOTAL_TT;
+        }
+        return sumTT;
+
+    }
     componentDidMount() {
         this.handLoad();
     }
@@ -45,6 +100,7 @@ class ReportDay extends Component {
             <View >
                 <View>
                     <View style={styles.container}>
+                        <Text>Năm</Text>
                         <View
                             style={{
 
@@ -63,16 +119,17 @@ class ReportDay extends Component {
                                 defaultValue={selectYear}
                                 placeholder="Chọn năm"
                                 containerStyle={{ height: 40 }}
-                                style={{ backgroundColor: '#fafafa', width: sizeWidth(40), borderColor: '#E1AC06', borderWidth: 2 }}
+                                style={{ backgroundColor: '#fafafa', width: sizeWidth(30), borderColor: '#E1AC06', borderWidth: 1 }}
                                 itemStyle={{
                                     justifyContent: 'flex-start'
                                 }}
-                                dropDownStyle={{ backgroundColor: '#fafafa', width: sizeWidth(40) }}
+                                dropDownStyle={{ backgroundColor: '#fafafa', width: sizeWidth(30) }}
                                 onChangeItem={item => this.setState({
                                     selectYear: item.value
                                 }, () => { this.handLoad() })}
                             />
                         </View>
+                        <Text>Tháng</Text>
                         <View
                             style={{
                                 ...(Platform.OS !== 'android' && {
@@ -100,11 +157,11 @@ class ReportDay extends Component {
                                 defaultValue={selectMonth}
                                 placeholder="Chọn tháng"
                                 containerStyle={{ height: 40 }}
-                                style={{ backgroundColor: '#fafafa', width: sizeWidth(40), borderColor: '#E1AC06', borderWidth: 2 }}
+                                style={{ backgroundColor: '#fafafa', width: sizeWidth(30), borderColor: '#E1AC06', borderWidth: 1 }}
                                 itemStyle={{
                                     justifyContent: 'flex-start'
                                 }}
-                                dropDownStyle={{ backgroundColor: '#fafafa', width: sizeWidth(40) }}
+                                dropDownStyle={{ backgroundColor: '#fafafa', width: sizeWidth(30) }}
                                 onChangeItem={item => this.setState({
                                     selectMonth: item.value
                                 }, () => { this.handLoad() })}
@@ -112,29 +169,75 @@ class ReportDay extends Component {
                         </View>
                     </View>
                 </View>
-                <ScrollView horizontal={true} style={{zIndex:-1}}>
-                    <View style={{ flexDirection: 'column' }}>
-                        <View style={[styles.mainUser, styles.custom, styles.customTop]}>
-                            <Text style={styles.row1}>Ngày</Text>
-                            <Text style={styles.row2}>Số lượng ĐH</Text>
-                            <Text style={styles.row4}>Tổng doanh số</Text>
-                            <Text style={styles.row5}>Hoa hồng</Text>
-                            <Text style={styles.row6}>Thực thu</Text>
+                <ScrollView horizontal={true} styles={{zIndex:-100}}>
+                        <View style={{ flexDirection: 'column' }}>
+                            <View style={[styles.mainUser, styles.custom, styles.customTop]}>
+                                <View style={[styles.row2, styles.row21]}>
+                                    <Text style={{ color: '#fff' }}>Năm</Text>
+                                </View>
+                                <View style={[styles.row3, styles.row21]}>
+                                    <Text style={{ color: '#fff' }}>Số lượng ĐH</Text>
+                                </View>
+                                <View style={[styles.row4, styles.row21]}>
+                                    <Text style={{ color: '#fff' }}>Tổng doanh số</Text>
+                                </View>
+                                <View style={[styles.row5, styles.row21]}>
+                                    <Text style={{ color: '#fff' }}>Hoa hồng</Text>
+                                </View>
+                                <View style={[styles.row7, styles.row21]}>
+                                    <Text style={{ color: '#fff' }}>Phụ phí</Text>
+                                </View>
+                                <View style={[styles.row6, styles.row21]}>
+                                    <Text style={{ color: '#fff' }}>Thực thu</Text>
+                                </View>
+                            </View>
+                            <View>
+                                {data.map((val, key) => {
+                                    return (
+                                        <View style={[styles.mainUser, styles.custom]}>
+                                            <View style={[styles.row2, styles.row22]}>
+                                                <Text style={{ color: '#000' }}>{val.YEAR}</Text>
+                                            </View>
+                                            <View style={[styles.row3, styles.row22]}>
+                                                <Text style={{ color: '#000' }}>{val.TOTAL_ORDER}</Text>
+                                            </View>
+                                            <View style={[styles.row4, styles.row22]}>
+                                                <Text style={{ color: '#000' }}>{numeral(val.TOTAL_MONEY).format("0,0")}</Text>
+                                            </View>
+                                            <View style={[styles.row5, styles.row22]}>
+                                                <Text style={{ color: '#000' }}>{numeral(val.TOTAL_COMMISSION).format("0,0")}</Text>
+                                            </View>
+                                            <View style={[styles.row7, styles.row22]}>
+                                                <Text style={{ color: '#000' }}>{ }</Text>
+                                            </View>
+                                            <View style={[styles.row6, styles.row22]}>
+                                                <Text style={{ color: '#000' }}>{numeral(val.TOTAL_TT).format("0,0")}</Text>
+                                            </View>
+                                        </View>
+                                    )
+                                })}
+                            </View>
+                            <View style={[styles.mainUser, styles.custom, styles.customTop]}>
+                                <View style={[styles.row2, styles.row23]}>
+                                    <Text style={{ color: '#fff' }}>Tổng</Text>
+                                </View>
+                                <View style={[styles.row3, styles.row23]}>
+                                    <Text style={{ color: '#fff' }}>{this.allData()}</Text>
+                                </View>
+                                <View style={[styles.row4, styles.row23]}>
+                                    <Text style={{ color: '#fff' }}>{numeral(this.allData1()).format("0,0")}</Text>
+                                </View>
+                                <View style={[styles.row5, styles.row23]}>
+                                    <Text style={{ color: '#fff' }}>{numeral(this.allData3()).format("0,0")}</Text>
+                                </View>
+                                <View style={[styles.row7, styles.row23]}>
+                                    <Text style={{ color: '#fff' }}>{}</Text>
+                                </View>
+                                <View style={[styles.row6, styles.row23]}>
+                                    <Text style={{ color: '#fff' }}>{numeral(this.allData4()).format("0,0")}</Text>
+                                </View>
+                            </View>
                         </View>
-                        <View>
-                            {data.map((val, key) => {
-                                return (
-                                    <View style={[styles.mainUser, styles.custom]}>
-                                        <Text style={styles.row1}>{val.DAY}</Text>
-                                        <Text style={styles.row2}>{val.TOTAL_ORDER}</Text>
-                                        <Text style={styles.row4}>{numeral(val.TOTAL_TT).format("0,0")}</Text>
-                                        <Text style={styles.row5} >{numeral(val.TOTAL_COMMISSION).format("0,0")}</Text>
-                                        <Text style={styles.row6}>{numeral(val.TOTAL_MONEY).format("0,0")}</Text>
-                                    </View>
-                                )
-                            })}
-                        </View>
-                    </View>
                 </ScrollView>
             </View>
 
@@ -154,6 +257,7 @@ const styles = StyleSheet.create({
     container: {
         flexDirection: 'row',
         justifyContent: 'space-around',
+        alignItems:'center',
         padding: 10,
     },
     mainUser: {
@@ -164,60 +268,77 @@ const styles = StyleSheet.create({
         height: sizeHeight(5),
         textAlign: 'center',
         width: sizeWidth(12),
-        borderRightColor: '#E1AC06',
-        borderRightWidth: 1,
+        borderRightColor: 'gray',
+        borderRightWidth: 10,
     },
     row2: {
         paddingTop: sizeHeight(1),
         textAlign: 'center',
-        width: sizeWidth(30),
-        borderRightColor: '#E1AC06',
+        width: sizeWidth(20),
+        borderRightColor: 'gray',
         borderRightWidth: 1,
+        height: sizeHeight(5),
     },
     row3: {
         paddingTop: sizeHeight(1),
         textAlign: 'center',
         width: sizeWidth(30),
-        borderRightColor: '#E1AC06',
+        borderRightColor: 'gray',
         borderRightWidth: 1,
     },
     row4: {
         paddingTop: sizeHeight(1),
         textAlign: 'center',
         width: sizeWidth(30),
-        borderRightColor: '#E1AC06',
+        borderRightColor: 'gray',
         borderRightWidth: 1,
     },
     row5: {
         paddingTop: sizeHeight(1),
         textAlign: 'center',
         width: sizeWidth(30),
-        borderRightColor: '#E1AC06',
+        borderRightColor: 'gray',
         borderRightWidth: 1,
     },
     row6: {
         paddingTop: sizeHeight(1),
         textAlign: 'center',
         width: sizeWidth(30),
-        borderRightColor: '#E1AC06',
+        borderRightColor: 'gray',
         borderRightWidth: 1,
     },
     row7: {
         paddingTop: sizeHeight(1),
         textAlign: 'center',
         width: sizeWidth(20),
-        borderRightColor: '#E1AC06',
+        borderRightColor: 'gray',
         borderRightWidth: 1,
     },
+    customTop: {
+        borderTopColor: 'gray',
+        borderTopWidth: 1,
+    },
     custom: {
-        borderBottomColor: '#E1AC06',
+        borderBottomColor: 'gray',
         borderBottomWidth: 1,
 
     },
-    customTop: {
-        borderTopColor: '#E1AC06',
-        borderTopWidth: 1,
-    }
+    row21: {
+        color: '#fff',
+        backgroundColor: 'black',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    row22: {
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    row23: {
+        color: '#fff',
+        backgroundColor: '#E1AC06',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
 })
 
 export default connect(

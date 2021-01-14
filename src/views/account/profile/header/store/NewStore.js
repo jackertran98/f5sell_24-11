@@ -113,7 +113,7 @@ class NewStore extends Component {
       TENTK: nameAccount,
       TENNH: nameBank,
       AVATAR: imageAvatar,
-      IDSHOP: this.props.idshop.USER_CODE,
+      IDSHOP: "ABC123",
       CMT: passport,
       IMG1: CMT_1,
       IMG2: CMT_2,
@@ -130,7 +130,7 @@ class NewStore extends Component {
             () => {
               this.props
                 .GetProfile({
-                  IDSHOP: this.props.idshop.USER_CODE,
+                  IDSHOP: "ABC123",
                   USER_CTV: this.props.authUser.USERNAME,
                   USERNAME: this.props.authUser.USERNAME,
                 })

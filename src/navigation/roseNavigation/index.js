@@ -1,10 +1,10 @@
 import * as React from "react";
 import { createStackNavigator, CardStyleInterpolators } from "@react-navigation/stack";
 import { TouchableOpacity, StyleSheet, TextInput, Image, Easing, View } from "react-native";
+import DetailOrder from "../../views/ordermain/detailorder";
 import Rose from "../../views/rose/listItem/index";
 import { COLOR } from "../../utils/color/colors";
-import SignIn from '../../views/account/register/signin/index';
-import SignUp from '../../views/account/register/signin/index';
+import DetailRose from '../../views/rose/subchilditem/detailrose';
 import {
   sizeFont,
   sizeWidth,
@@ -66,7 +66,7 @@ MyHomeStack = (props) => {
           title: "Hoa hồng",
           headerStyle: {
             backgroundColor: COLOR.HEADER,
-            height: Platform.OS == 'ios' ? sizeHeight(11) : sizeHeight(9),
+            height: Platform.OS == 'ios' ? sizeHeight(12) : sizeHeight(9),
             color: 'white',
           },
           headerTitleAlign: "center",
@@ -87,37 +87,53 @@ MyHomeStack = (props) => {
             </TouchableOpacity>
 
           ),
-          headerRight: () => {
-            return (
-              <View style={{ marginRight: 20 }}>
-                <HeaderLeftComponet
-                  navigation={navigation}
-                  onPress={() => navigation.navigate("Thông báo", {
-                    NAME: "Order",
-                  })}
-                  name="bell"
-                  size={sizeFont(6)}
-                  color="#fff"
-                />
-                <View style={styles.viewList}>
-                  {countNotify < 100 ? <Text
-                    style={{
-                      color: "#fff",
-                      textAlign: "center",
-                      fontSize: sizeFont(3),
-                    }}
-                  >
-                    {countNotify}
-                  </Text> : <Text style={{
-                    fontSize: sizeFont(2), color: "#fff",
-                  }}>99+</Text>}
-                </View>
-              </View>
-            );
-          },
+          // headerRight: () => {
+          //   return (
+          //     <View style={{ marginRight: 20 }}>
+          //       <HeaderLeftComponet
+          //         navigation={navigation}
+          //         onPress={() => navigation.navigate("Thông báo", {
+          //           NAME: "Order",
+          //         })}
+          //         name="bell"
+          //         size={sizeFont(6)}
+          //         color="#fff"
+          //       />
+          //       <View style={styles.viewList}>
+          //         {countNotify < 100 ? <Text
+          //           style={{
+          //             color: "#fff",
+          //             textAlign: "center",
+          //             fontSize: sizeFont(3),
+          //           }}
+          //         >
+          //           {countNotify}
+          //         </Text> : <Text style={{
+          //           fontSize: sizeFont(2), color: "#fff",
+          //         }}>99+</Text>}
+          //       </View>
+          //     </View>
+          //   );
+          // },
         })}
       />
 
+      <HomeStack.Screen
+        name="DetailOrder"
+        component={DetailOrder}
+        options={({ route }) => ({
+          title: "Chi tiết đơn hàng",
+          headerStyle: {
+            backgroundColor: COLOR.HEADER,
+            height: sizeHeight(10),
+          },
+          headerTitleAlign: "center",
+          headerTitleStyle: {
+            color: 'white',
+          },
+          headerTintColor: '#fff'
+        })}
+      />
 
       <HomeStack.Screen
         name="Thông báo"
@@ -159,6 +175,26 @@ MyHomeStack = (props) => {
             backgroundColor: COLOR.HEADER
           },
           headerTintColor: '#fff',
+        }}
+      />
+      <HomeStack.Screen
+        name="detailrose"
+        component={DetailRose}
+        options={{
+          title: "Yêu cầu thanh toán hoa hồng",
+          headerStyle: {
+            backgroundColor: COLOR.HEADER
+          },
+          headerTintColor: '#fff',
+          headerLeft: () => (
+            <HeaderLeftComponet
+              navigation={navigation}
+              onPress={() => navigation.navigate("Rose")}
+              name="chevron-left"
+              size={sizeFont(6)}
+              color="#fff"
+            />
+          ),
         }}
       />
       <HomeStack.Screen

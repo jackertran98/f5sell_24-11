@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { StyleSheet, Text, View, TouchableOpacity, Image, Picker, ScrollView, RefreshControl } from 'react-native'
+import { StyleSheet, Text, View, TouchableOpacity, Image, Picker, ScrollView, RefreshControl, FlatList, Alert } from 'react-native'
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import moment from "moment";
 import { sizeHeight, sizeWidth } from '../../../utils/helper/size.helper';
@@ -26,6 +26,7 @@ class ShopOrder extends Component {
             refreshing: false,
             selectedValue: '',
             refreshing: false,
+            page: 1,
         }
     }
 
@@ -72,9 +73,9 @@ class ShopOrder extends Component {
             START_TIME: '',
             END_TIME: '',
             STATUS: '',
-            PAGE: 1,
+            PAGE: this.state.page,
             NUMOFPAGE: 10,
-            IDSHOP: this.props.idshop.USER_CODE,
+            IDSHOP: 'http://banbuonthuoc.moma.vn',
         })
             .then((result) => {
                 if (result.data.ERROR === "0000") {
@@ -91,6 +92,68 @@ class ShopOrder extends Component {
                 this.setState({ loading: false });
             });
     };
+    renderRow = ({ item }) => {
+        return (
+
+            <TouchableOpacity
+                onPress={() => this.props.navigation.navigate("DetailOrder", {
+                    ID: item.CODE_ORDER,
+                    STATUS: item.STATUS,
+                    NAME:'Order',
+                })
+                }
+            >
+                <View style={{ borderColor: '#B8C4C4', borderWidth: 1, margin: 10, padding: 5 }}>
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                        <View>
+                            <Text style={{ fontWeight: "bold" }}>
+                                Mã ĐH: {item.CODE_ORDER}{" "}
+                            </Text>
+                        </View>
+                        <View>
+                            {this.checkColor(item)}
+                        </View>
+                    </View>
+                    <View style={{ flexDirection: 'row' }}>
+                        <Text>CTV:{item.FULL_NAME_CTV}</Text>
+                        <Text style={{ marginLeft: sizeWidth(5) }}>Mã CTV: {item.USER_CODE}</Text>
+                    </View>
+                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                        <Image
+                            source={require('../../../assets/images/clock.png')}
+                            style={{ width: sizeWidth(5), height: sizeHeight(5), }}
+                        />
+                        <Text>
+                            {item.CREATE_DATE}
+                        </Text>
+                    </View>
+                    <View style={{ flexDirection: 'row', borderColor: 'black', borderWidth: 1 }}>
+                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                            <Image
+                                source={require('../../../assets/images/human.png')}
+                                style={{ width: sizeWidth(5), height: sizeHeight(5), }}
+                            />
+                            <Text style={{ color: '#F97932' }}>{item.FULLNAME_RECEIVER}</Text>
+                        </View>
+                        <View style={{ flexDirection: 'row', alignItems: 'center', marginLeft: sizeWidth(5) }}>
+                            <Image
+                                source={require('../../../assets/images/phone.png')}
+                                style={{ width: sizeWidth(5), height: sizeHeight(5), }}
+                            />
+                            <Text style={{ color: '#F97932' }}>{item.MOBILE_RECCEIVER}</Text>
+                        </View>
+                    </View>
+                    <View style={{ paddingTop: 7 }}>
+                        <Text style={{ fontWeight: 'bold' }}>Tổng tiền: <Text style={{ color: '#F90000' }}>{numeral(item.TOTAL_MONEY).format("0,0")}</Text></Text>
+                    </View>
+                </View>
+            </TouchableOpacity>
+
+        )
+    }
+    handLoadMore = () => {
+        this.setState({ page: this.state.page + 1 })
+    }
     handleLoad = () => {
         getListOrder({
             USERNAME: '',
@@ -100,7 +163,7 @@ class ShopOrder extends Component {
             STATUS: '',
             PAGE: 1,
             NUMOFPAGE: 300,
-            IDSHOP: this.props.idshop.USER_CODE,
+            IDSHOP: 'http://banbuonthuoc.moma.vn',
         })
             .then((res) => {
                 console.log("get list Order", res);
@@ -120,17 +183,31 @@ class ShopOrder extends Component {
         this.handleLoad();
     }
     checkColor = (a) => {
-        if (a == 'Đã tiếp nhận') {
-            return <Text style={{ backgroundColor: '#E1AC06', padding: 4, color: '#FFFFFF', paddingLeft: 15, paddingRight: 15 }}>Đã tiếp nhận</Text>
-        } else if (a == 'Đã hủy') {
-            return <Text style={{ backgroundColor: '#FF0000', padding: 4, color: '#FFFFFF', paddingLeft: 35, paddingRight: 35 }}>Đã hủy</Text>
-        } else if (a == 'Đang xử lý') {
-            return <Text style={{ backgroundColor: '#149CC6', padding: 4, color: '#FFFFFF', paddingLeft: 15, paddingRight: 15 }}>Đang xử lý</Text>
+        console.log("hello a",a);
+        if (a.STATUS == 1) {
+            return <View style={{ backgroundColor: '#4a8939', width: sizeWidth(30), height: sizeHeight(4), justifyContent: 'center', alignItems: 'center' }}>
+                <Text style={{ color: '#FFFFFF', }}>{a.STATUS_NAME}</Text>
+            </View>
+        } else if (a.STATUS == 2) {
+            return <View style={{ backgroundColor: '#149CC6', width: sizeWidth(30), height: sizeHeight(4), justifyContent: 'center', alignItems: 'center' }}>
+                <Text style={{ color: '#FFFFFF', }}>{a.STATUS_NAME}</Text>
+            </View>
 
-        } else if (a == 'Đang chuyển') {
-            return <Text style={{ backgroundColor: '#149CC6', padding: 4, color: '#FFFFFF', paddingLeft: 15, paddingRight: 15 }}>Đang chuyển</Text>
+        } else if (a.STATUS == 3) {
+            return <View style={{ backgroundColor: '#149CC6', width: sizeWidth(30), height: sizeHeight(4), justifyContent: 'center', alignItems: 'center' }}>
+                <Text style={{ color: '#FFFFFF', }}>{a.STATUS_NAME}</Text>
+            </View>
+
+        } else if (a.STATUS == 4) {
+            return <View style={{ backgroundColor: '#FF0000', width: sizeWidth(30), height: sizeHeight(4), justifyContent: 'center', alignItems: 'center' }}>
+                <Text style={{ color: '#FFFFFF', }}>{a.STATUS_NAME}</Text>
+            </View>
+
         } else {
-            return <Text style={{ backgroundColor: '#279907', padding: 4, color: '#FFFFFF', paddingLeft: 15, paddingRight: 15 }}>Hoàn thành</Text>
+            return <View style={{ backgroundColor: '#279907', width: sizeWidth(30), height: sizeHeight(4), justifyContent: 'center', alignItems: 'center' }}>
+                <Text style={{ color: '#FFFFFF', }}>{a.STATUS_NAME}</Text>
+            </View>
+
         }
     }
     render() {
@@ -143,17 +220,14 @@ class ShopOrder extends Component {
                     <View style={styles.confix}>
                         <TouchableOpacity
                             onPress={this.showDatePicker1}
-                            style={{ flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center' }}
+                            style={{ justifyContent: 'center' }}
                         >
                             <View>
                                 <Text style={{ fontSize: 12 }}>Bắt đầu</Text>
                                 <Text style={{ fontSize: 12 }}>{this.state.startTime}</Text>
                             </View>
 
-                            <Image
-                                style={{ width: 35, height: 35, alignItems: 'center' }}
-                                source={require('../../../assets/images/lich.png')}
-                            />
+
 
                         </TouchableOpacity>
                         <DateTimePickerModal
@@ -163,20 +237,17 @@ class ShopOrder extends Component {
                             onCancel={this.hideDatePicker1}
                         />
                     </View>
+
                     <View style={styles.confix}>
                         <TouchableOpacity
                             onPress={this.showDatePicker2}
-                            style={{ flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center' }}
+                            style={{ justifyContent: 'center' }}
                         >
                             <View>
                                 <Text style={{ fontSize: 12 }}>Kết thúc</Text>
-                                <Text style={{ fontSize: 12 }}>{this.state.endTime}</Text>
+                                <Text style={{ fontSize: 14 }}>{this.state.endTime}</Text>
                             </View>
                             <View>
-                                <Image
-                                    style={{ width: 35, height: 35 }}
-                                    source={require('../../../assets/images/lich.png')}
-                                />
                             </View>
                         </TouchableOpacity>
                         <DateTimePickerModal
@@ -212,8 +283,8 @@ class ShopOrder extends Component {
                             ]}
                             defaultValue={selectedValue}
                             placeholder="Tất cả"
-                            containerStyle={{ height: 40 }}
-                            style={{ backgroundColor: '#fafafa', width: sizeWidth(38), borderColor: '#E1AC06', borderWidth: 2 }}
+                            containerStyle={{ height: sizeHeight(5.8) }}
+                            style={{ backgroundColor: '#fafafa', width: sizeWidth(38), borderColor: '#4a8939', borderWidth: 1 }}
                             itemStyle={{
                                 justifyContent: 'flex-start'
                             }}
@@ -236,7 +307,7 @@ class ShopOrder extends Component {
                                         STATUS: selectedValue,
                                         PAGE: 1,
                                         NUMOFPAGE: 300,
-                                        IDSHOP: this.props.idshop.USER_CODE,
+                                        IDSHOP: 'http://banbuonthuoc.moma.vn',
                                     })
                                         .then((res) => {
                                             console.log("loc res", res)
@@ -245,7 +316,10 @@ class ShopOrder extends Component {
                                                     Data: res.data.INFO
                                                 })
                                             } else {
-                                                alert('Thông báo', 'Không có dữ liệu');
+                                                Alert.alert('Thông báo', 'Không có dữ liệu');
+                                                this.setState({
+                                                    Data: []
+                                                })
                                             }
                                         })
                                         .catch((err) => {
@@ -259,6 +333,7 @@ class ShopOrder extends Component {
                                     color: 'white',
                                     textAlign: "center",
                                     backgroundColor: '#149CC6',
+
                                     padding: 10,
                                     paddingLeft: 20,
                                     paddingRight: 20,
@@ -269,10 +344,12 @@ class ShopOrder extends Component {
                         </TouchableOpacity>
                     </View>
                 </View>
-                <View style={{ height: 3, backgroundColor: '#B8C4C4', marginTop: sizeHeight(5), zIndex: -1 }}></View>
-                <Text style={{ fontSize: 18, paddingLeft: 5, zIndex: -1 }}>Tổng số đơn hàng: <Text style={{ fontWeight: "bold" }}>{Data.length} đơn</Text></Text>
-                <View style={{ height: 3, backgroundColor: '#B8C4C4', zIndex: -1 }}></View>
-                {loading ? <Loading /> : <ScrollView
+                <View style={{ height: 1.5, backgroundColor: '#B8C4C4', marginTop: sizeHeight(2), zIndex: -1 }}></View>
+                <Text style={{ fontSize: 18, padding: 5, zIndex: -1 }}>Tổng số đơn hàng: <Text style={{ fontWeight: "bold" }}>{Data.length} đơn</Text></Text>
+                <View style={{ height: 1.5, backgroundColor: '#B8C4C4', zIndex: -1 }}></View>
+                {loading ? <Loading /> : <FlatList
+                    data={Data}
+                    renderItem={this.renderRow}
                     style={{ zIndex: -1 }}
                     refreshControl={
                         <RefreshControl
@@ -280,62 +357,10 @@ class ShopOrder extends Component {
                             onRefresh={() => this.handleLoad()}
                         />
                     }
-                >
-                    {Data.length === 0 ? null : Data.map((Val, key) => (
-                        <TouchableOpacity
-                            onPress={() => this.props.navigation.navigate("DetailOrder", {
-                                ID: Val.CODE_ORDER
-                            })
-                            }
-                            key={key}
-                        >
-                            <View style={{ borderColor: '#B8C4C4', borderWidth: 1, margin: 10, padding: 5 }}>
-                                <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                                    <View>
-                                        <Text style={{ fontWeight: "bold" }}>
-                                            Mã ĐH: {Val.CODE_ORDER}{" "}
-                                        </Text>
-                                    </View>
-                                    <View>
-                                        {this.checkColor(Val.STATUS_NAME)}
-                                    </View>
-                                </View>
-                                <View style={{ flexDirection: 'row' }}>
-                                    <Text>CTV:{Val.FULL_NAME_CTV}</Text>
-                                    <Text style={{ marginLeft: sizeWidth(5) }}>Mã CTV: {Val.USER_CODE}</Text>
-                                </View>
-                                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                    <Image
-                                        source={require('../../../assets/images/clock.png')}
-                                        style={{ width: sizeWidth(5), height: sizeHeight(5), }}
-                                    />
-                                    <Text>
-                                        {Val.CREATE_DATE}
-                                    </Text>
-                                </View>
-                                <View style={{ flexDirection: 'row', borderColor: 'black', borderWidth: 1 }}>
-                                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                        <Image
-                                            source={require('../../../assets/images/human.png')}
-                                            style={{ width: sizeWidth(5), height: sizeHeight(5), }}
-                                        />
-                                        <Text style={{ color: '#F97932' }}>{Val.FULLNAME_RECEIVER}</Text>
-                                    </View>
-                                    <View style={{ flexDirection: 'row', alignItems: 'center', marginLeft: sizeWidth(5) }}>
-                                        <Image
-                                            source={require('../../../assets/images/phone.png')}
-                                            style={{ width: sizeWidth(5), height: sizeHeight(5), }}
-                                        />
-                                        <Text style={{ color: '#F97932' }}>{Val.MOBILE_RECCEIVER}</Text>
-                                    </View>
-                                </View>
-                                <View style={{ paddingTop: 7 }}>
-                                    <Text style={{ fontWeight: 'bold' }}>Tổng tiền: <Text style={{ color: '#F90000' }}>{numeral(Val.TOTAL_MONEY).format("0,0")}</Text></Text>
-                                </View>
-                            </View>
-                        </TouchableOpacity>
-                    ))}
-                </ScrollView>}
+                    onEndReached={this.handLoadMore}
+                />
+
+                }
             </View>
         )
     }
@@ -350,13 +375,14 @@ const mapStateToProps = (state) => {
 };
 const styles = StyleSheet.create({
     confix: {
-        width: sizeWidth(38),
-        borderColor: '#E1AC06',
+        width: sizeWidth(40),
+        borderColor: '#4a8939',
         paddingLeft: 10,
         paddingRight: 10,
-        borderWidth: 2,
+        borderWidth: 1,
         borderRadius: 5,
-        height: sizeHeight(5),
+        height: sizeHeight(5.7),
+        justifyContent: 'center',
     },
     confix1: {
         marginTop: 10,

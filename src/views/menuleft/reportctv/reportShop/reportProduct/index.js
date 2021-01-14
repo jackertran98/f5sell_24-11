@@ -34,7 +34,7 @@ class index extends Component {
             PR_CODE: '',
             REPORT_TYPE: selectedMoth,
             DISPLAY_TYPE: display,
-            IDSHOP: this.props.idshop.USER_CODE
+            IDSHOP: "ABC123"
         })
             .then((result) => {
                 console.log("this is ReportItem", result);

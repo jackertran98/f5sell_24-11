@@ -85,11 +85,11 @@ MyHomeStack = (props) => {
         name="Product"
         component={Product}
         options={({ route }) => ({
-          headerShown:false,
+          headerShown: false,
           title: "",
           headerStyle: {
             backgroundColor: COLOR.HEADER,
-            height: sizeHeight(12),
+            height: Platform.OS == "ios" ? sizeHeight(12) : sizeHeight(9),
           },
           headerTitleStyle: {
             color: COLOR.HEADER,
@@ -103,7 +103,6 @@ MyHomeStack = (props) => {
                 onSubmitEditing={() => searchProduct(value)}
                 style={{
                   paddingLeft: 10,
-                  height: Platform.OS == "ios" ? sizeHeight(4) : sizeHeight(5),
                   width: sizeWidth(55),
                   borderColor: 'white',
                   borderWidth: 1,
@@ -165,7 +164,7 @@ MyHomeStack = (props) => {
                 <View>
                   <HeaderLeftComponet
                     navigation={navigation}
-                    onPress={() => navigation.navigate("Thông báo", {
+                    onPress={() => navigation.navigate("notiProduct", {
                       NAME: 'Product',
                     })}
                     name="bell"
@@ -192,9 +191,10 @@ MyHomeStack = (props) => {
         })}
       />
       <HomeStack.Screen
-        name="Thông báo"
+        name="notiProduct"
         component={Notification}
         options={({ route }) => ({
+          title:'Thông báo',
           headerTitleAlign: "center",
           headerBackTitle: null,
           headerStyle: {
@@ -351,11 +351,6 @@ MyHomeStack = (props) => {
                   >
                     <HeaderLeftComponet
                       navigation={navigation}
-                      onPress={() =>
-                        navigation.navigate("Carts", {
-                          NAME: "DetailProducts",
-                        })
-                      }
                       name="shopping-cart"
                       size={sizeFont(6)}
                       color="white"

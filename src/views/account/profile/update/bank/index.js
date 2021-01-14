@@ -1,7 +1,10 @@
 import React, { Component } from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 import styles from "../style";
-import { FormTextInput } from "../../../../../components/textinput";
+import ComponentTextInput, {
+  FormTextInput,
+  FormTextInputNoIcon,
+} from "../../../../../components/textinput";
 import {
   sizeFont,
   sizeWidth,
@@ -9,10 +12,21 @@ import {
 } from "../../../../../utils/helper/size.helper";
 import { COLOR } from "../../../../../utils/color/colors";
 export default class ListBank extends Component {
+    constructor(props){
+      super(props)
+    this.state={
+      namenh:''
+    }
+  }
+  changeDistrictChild=(text)=>{
+      this.setState({namenh:text})
+      this.props.changeStateBank(text);
+  }
   render() {
     const {
       account,
       nameBank,
+      chinhanh,
       nameAccount,
       changeStateAccount,
       changeStateName,
@@ -26,7 +40,7 @@ export default class ListBank extends Component {
     return (
       <View style={{ marginTop: sizeHeight(2) }}>
         <View style={styles.infor}>
-          <Text style={styles.textInfor}>Tài khoản ngân hành</Text>
+          <Text style={styles.textInfor}>Tài khoản ngân hàng</Text>
         </View>
         <View style={{ alignSelf: "center", marginTop: sizeHeight(1) }}>
           <FormTextInput
@@ -73,12 +87,45 @@ export default class ListBank extends Component {
           />
           <FormTextInput
             props={{
-              placeholder: "Ngân hàng",
+              placeholder: "Ngân hàng",
+              placeholderTextColor: "#999",
+              type: "email",
+              value:{changeStateBank},
+              size: sizeFont(6),
+              name: "chevron-down",
+              onChangeText: (text) => null,
+              primary: "#017DFF",
+              color: COLOR.MAIN,
+              onDelete: () => null,
+              style: styles.styleWidth,
+            }}
+            eye={false}
+            onSetSee={this.onSetSee}
+            styleTextInput={{
+              width: sizeWidth(76),
+            }}
+            styleChild={styles.styleChild}
+            pointerEvents="none"
+            value={this.state.namenh.vn_name}
+            onPressCustom={() => {
+
+              this.props.navigation.navigate("Listbank", {
+                onSetDistrictChild: this.changeDistrictChild,
+                NAME: "Thông tin CTV",
+              });
+
+            }}
+            changeColor={COLOR.MAIN}
+            light
+          />
+          <FormTextInput
+            props={{
+              placeholder: "Chi nhánh",
               placeholderTextColor: "#999",
               type: "email",
               size: sizeFont(6),
               name: "times-circle",
-              value: nameBank,
+              value: chinhanh,
               onChangeText: (text) => changeStateBank(text),
               primary: "#017DFF",
               color: COLOR.BUTTON,
@@ -92,11 +139,20 @@ export default class ListBank extends Component {
             }}
             styleChild={styles.styleChild}
           />
+          {/* <View style={{ height: sizeHeight(9),width:sizeWidth(91), marginTop: 10, marginBottom: 10, borderColor: COLOR.MAIN, borderWidth: 1, borderRadius: 5, padding: 10, backgroundColor: '#fff',flexDirection:'row',justifyContent:'space-between' }}>
+                <View>
+                  <Text style={{ color: 'gray',marginTop:-5 }}>Mã cộng tác viên</Text>
+              <Text style={{ lineHeight: 30 }}>{this.props.authUser.USER_CODE}</Text>
+                </View>
+                <TouchableOpacity onPress={() => Clipboard.setString(`${this.props.authUser.USER_CODE}`) }>
+                  <Text>copy</Text>
+                </TouchableOpacity>
+              </View> */}
         </View>
         <TouchableOpacity
           onPress={updateAccount}
           style={{
-            backgroundColor: COLOR.BUTTON,
+            backgroundColor: COLOR.MAIN,
             paddingVertical: sizeHeight(2),
             borderRadius: 6,
             width: sizeWidth(70),

@@ -6,7 +6,7 @@ import {
   sizeFont,
   sizeHeight,
 } from "../../utils/helper/size.helper";
-import FontAwesome5Pro from "react-native-vector-icons/FontAwesome5Pro";
+import FontAwesome5Pro from "react-native-vector-icons/FontAwesome5";
 import { COLOR } from "../../utils/color/colors";
 export class FormTextInputNoIcon extends Component {
   constructor(props) {

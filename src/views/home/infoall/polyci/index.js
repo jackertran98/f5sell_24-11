@@ -50,7 +50,7 @@ class index extends Component {
           USERNAME: this.props.authUser.USERNAME,
           TYPES: 2,
           ID_PARENT: '',
-          IDSHOP: this.props.idshop.USER_CODE,
+          IDSHOP: "ABC123",
           CATEGORY: '',
         })
           .then((result) => {

@@ -1,71 +1,180 @@
 import React, { Component } from 'react'
-import { StyleSheet, Text, View, TouchableOpacity, Image, Picker, ScrollView,RefreshControl } from 'react-native'
+import { StyleSheet, Text, View, TouchableOpacity, Image, Picker, ScrollView, RefreshControl } from 'react-native'
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import moment from "moment";
-import { sizeHeight, sizeWidth } from '../../../../utils/helper/size.helper';
+import { sizeFont, sizeHeight, sizeWidth } from '../../../../utils/helper/size.helper';
 import { connect } from 'react-redux';
 var numeral = require("numeral");
 import Loading from '../../../../components/loading';
 import { ReportDefault } from "../../../../service/account";
+import { DataTable } from 'react-native-paper';
 class ReportYear extends Component {
-    constructor(props){
+    constructor(props) {
         super(props)
-        this.state={
-            data:[],
-            loading:'false',
+        this.state = {
+            data: [],
+            loading: 'false',
         }
     }
     handLoad = () => {
         ReportDefault({
-            USERNAME:'f5shop',
+            USERNAME: 'f5shop',
             YEAR: '',
             MONTH: '',
-            REPORT_TYPE:'1',
-            IDSHOP: this.props.idshop.USER_CODE
+            REPORT_TYPE: '1',
+            IDSHOP: "ABC123"
         })
-        .then((res) => {
-            console.log("yearrr",res);
-            this.setState({
-                data:res.data.INFO
+            .then((res) => {
+                console.log("yearrr", res);
+                this.setState({
+                    data: res.data.INFO
+                })
             })
-        })    
     }
+    allData = (a) => {
+        const { data } = this.state;
+        var sumOrder = 0;
+        var sumMonney = 0;
+        var sumCommitsion = 0;
+        var sumTT = 0;
+
+
+        if(data){
+        for (var i = 0; i < data.length; i++) {
+                sumOrder = sumOrder + data[i].TOTAL_ORDER;
+            }
+            return sumOrder;
+        }
+
+    }
+    allData1 = () => {
+        const { data } = this.state;
+        var sumOrder = 0;
+        var sumMonney = 0;
+        var sumCommitsion = 0;
+        var sumTT = 0;
+
+        if(data){
+        for (let i = 0; i < data.length; i++) {
+            sumMonney += data[i].TOTAL_MONEY;
+        }
+        return sumMonney;
+    }
+
+    }
+    allData3 = () => {
+        const { data } = this.state;
+        var sumOrder = 0;
+        var sumMonney = 0;
+        var sumCommitsion = 0;
+        var sumTT = 0;
+
+        if(data){
+        for (let i = 0; i < data.length; i++) {
+            sumCommitsion += data[i].TOTAL_COMMISSION;
+        }
+        return sumCommitsion;
+    }
+
+    }
+    allData4 = () => {
+        const { data } = this.state;
+        var sumTT = 0;
+        if(data){
+        for (let i = 0; i < data.length; i++) {
+            sumTT += data[i].TOTAL_TT;
+        }
+        return sumTT;
+    }
+
+    }
+
+
+
     componentDidMount() {
         this.handLoad();
     }
     render() {
-        const {data}=this.state;
+        const { data } = this.state;
+        console.log("this is reportday", this.props.navigation);
         return (
             <View>
-                    <ScrollView horizontal={true}>
+                <ScrollView horizontal={true}>
+                    <TouchableOpacity
+                    onPress={()=>{this.props.navigation.navigate("reportday")}} 
+                    >
                         <View style={{ flexDirection: 'column' }}>
                             <View style={[styles.mainUser, styles.custom, styles.customTop]}>
-                                <Text style={styles.row1}>STT</Text>
-                                <Text style={styles.row2}>Năm</Text>
-                                <Text style={styles.row3}>Số lượng ĐH</Text>
-                                <Text style={styles.row4}>Tổng doanh số</Text>
-                                <Text style={styles.row5}>Hoa hồng</Text>
-                                <Text style={styles.row6}>Thực thu</Text>
+                                <View style={[styles.row2, styles.row21]}>
+                                    <Text style={{ color: '#fff' }}>Năm</Text>
+                                </View>
+                                <View style={[styles.row3, styles.row21]}>
+                                    <Text style={{ color: '#fff' }}>Số lượng ĐH</Text>
+                                </View>
+                                <View style={[styles.row4, styles.row21]}>
+                                    <Text style={{ color: '#fff' }}>Doanh số</Text>
+                                </View>
+                                <View style={[styles.row5, styles.row21]}>
+                                    <Text style={{ color: '#fff' }}>Hoa hồng</Text>
+                                </View>
+                                <View style={[styles.row7, styles.row21]}>
+                                    <Text style={{ color: '#fff' }}>Phụ phí</Text>
+                                </View>
+                                <View style={[styles.row6, styles.row21]}>
+                                    <Text style={{ color: '#fff' }}>Thực thu</Text>
+                                </View>
                             </View>
                             <View>
-                                {data.map((val, key) => {
+                                {data && data.map((val, key) => {
                                     return (
                                         <View style={[styles.mainUser, styles.custom]}>
-                                            <Text style={styles.row1}>{key}</Text>
-                                            <Text style={styles.row4}>{val.YEAR}</Text>
-                                            <Text style={styles.row2}>{val.TOTAL_ORDER}</Text>
-                                            <Text style={styles.row3}>{numeral(val.TOTAL_MONEY).format("0,0")}</Text>
-                                            <Text style={styles.row4}>{numeral(val.TOTAL_COMMISSION).format("0,0")}</Text>
-                                            <Text style={styles.row5} >{numeral(val.TOTAL_TT).format("0,0")}</Text>
-                                            
+                                            <View style={[styles.row2, styles.row22]}>
+                                                <Text style={{ color: '#000',fontSize:12 }}>{val.YEAR}</Text>
+                                            </View>
+                                            <View style={[styles.row3, styles.row22]}>
+                                                <Text style={{ color: '#000',fontSize:12 }}>{val.TOTAL_ORDER}</Text>
+                                            </View>
+                                            <View style={[styles.row4, styles.row22]}>
+                                                <Text style={{ color: '#000',fontSize:12 }}>{numeral(val.TOTAL_MONEY).format("0,0")}</Text>
+                                            </View>
+                                            <View style={[styles.row5, styles.row22]}>
+                                                <Text style={{ color: '#000',fontSize:12 }}>{numeral(val.TOTAL_COMMISSION).format("0,0")}</Text>
+                                            </View>
+                                            <View style={[styles.row7, styles.row22]}>
+                                                <Text style={{ color: '#000',fontSize:12 }}>{ }</Text>
+                                            </View>
+                                            <View style={[styles.row6, styles.row22]}>
+                                                <Text style={{ color: '#000',fontSize:12 }}>{numeral(val.TOTAL_TT).format("0,0")}</Text>
+                                            </View>
                                         </View>
                                     )
                                 })}
                             </View>
+                            <View style={[styles.mainUser, styles.custom, styles.customTop]}>
+                                <View style={[styles.row2, styles.row23]}>
+                                    <Text style={{ color: '#fff' }}>Tổng</Text>
+                                </View>
+                                <View style={[styles.row3, styles.row23]}>
+                                    <Text style={{ color: '#fff' }}>{this.allData()}</Text>
+                                </View>
+                                <View style={[styles.row4, styles.row23]}>
+                                    <Text style={{ color: '#fff',fontSize:sizeFont(4), }}>{numeral(this.allData1()).format("0,0")}</Text>
+                                </View>
+                                <View style={[styles.row5, styles.row23]}>
+                                    <Text style={{ color: '#fff' }}>{numeral(this.allData3()).format("0,0")}</Text>
+                                </View>
+                                <View style={[styles.row7, styles.row23]}>
+                                    <Text style={{ color: '#fff' }}>{}</Text>
+                                </View>
+                                <View style={[styles.row6, styles.row23]}>
+                                    <Text style={{ color: '#fff' }}>{numeral(this.allData4()).format("0,0")}</Text>
+                                </View>
+                            </View>
                         </View>
-                    </ScrollView>
-                </View>
-           
+                    </TouchableOpacity>
+                </ScrollView>
+            </View>
+
         )
     }
 }
@@ -79,69 +188,85 @@ const mapStateToProps = (state) => {
     };
 };
 const styles = StyleSheet.create({
-    mainUser:{
-        flexDirection:'row',
+    mainUser: {
+        flexDirection: 'row',
+
+    },
+    row1: {
+        paddingTop: sizeHeight(1),
+        height: sizeHeight(5),
+        textAlign: 'center',
+        width: sizeWidth(10),
+        borderRightColor: 'gray',
+        borderRightWidth: 1,
+    },
+    row2: {
+        paddingTop: sizeHeight(1),
+        width: sizeWidth(15),
+        borderRightColor: 'gray',
+        borderRightWidth: 1,
         
     },
-    row1:{
-        paddingTop:sizeHeight(1),
-        height:sizeHeight(5),
+    row3: {
+        paddingTop: sizeHeight(1),
+        width: sizeWidth(20),
+        borderRightColor: 'gray',
+        borderRightWidth: 1,
+    },
+    row4: {
+        paddingTop: sizeHeight(1),
+        width: sizeWidth(30),
+        borderRightColor: 'gray',
+        borderRightWidth: 1,
         textAlign:'center',
-        width:sizeWidth(10),
-        borderRightColor:'#E1AC06',
-        borderRightWidth:1,
     },
-    row2:{
-        paddingTop:sizeHeight(1),
-        textAlign:'center',
-        width:sizeWidth(30),
-        borderRightColor:'#E1AC06',
-        borderRightWidth:1,
+    row5: {
+        paddingTop: sizeHeight(1),
+        textAlign: 'center',
+        width: sizeWidth(25),
+        borderRightColor: 'gray',
+        borderRightWidth: 1,
     },
-    row3:{
-        paddingTop:sizeHeight(1),
-        textAlign:'center',
-        width:sizeWidth(30),
-        borderRightColor:'#E1AC06',
-        borderRightWidth:1,
+    row6: {
+        paddingTop: sizeHeight(1),
+        textAlign: 'center',
+        width: sizeWidth(30),
+        borderRightColor: 'gray',
+        borderRightWidth: 1,
     },
-    row4:{
-        paddingTop:sizeHeight(1),
-        textAlign:'center',
-        width:sizeWidth(30),
-        borderRightColor:'#E1AC06',
-        borderRightWidth:1,
+    row7: {
+        paddingTop: sizeHeight(1),
+        textAlign: 'center',
+        width: sizeWidth(20),
+        borderRightColor: 'gray',
+        borderRightWidth: 1,
     },
-    row5:{
-        paddingTop:sizeHeight(1),
-        textAlign:'center',
-        width:sizeWidth(30),
-        borderRightColor:'#E1AC06',
-        borderRightWidth:1,
+    custom: {
+        borderBottomColor: 'gray',
+        borderBottomWidth: 1,
+
     },
-    row6:{
-        paddingTop:sizeHeight(1),
-        textAlign:'center',
-        width:sizeWidth(30),
-        borderRightColor:'#E1AC06',
-        borderRightWidth:1,
+    customTop: {
+        borderTopColor: 'gray',
+        borderTopWidth: 1,
     },
-    row7:{
-        paddingTop:sizeHeight(1),
-        textAlign:'center',
-        width:sizeWidth(20),
-        borderRightColor:'#E1AC06',
-        borderRightWidth:1,
+    row21: {
+        color: '#fff',
+        backgroundColor: 'black',
+        justifyContent: 'center',
+        alignItems: 'center',
     },
-    custom:{
-        borderBottomColor:'#E1AC06',
-        borderBottomWidth:1,
-        
+    row22: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        flex:1,
     },
-    customTop:{
-        borderTopColor:'#E1AC06',
-        borderTopWidth:2,
-    }
+    row23: {
+        color: '#fff',
+        backgroundColor: '#E1AC06',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
 })
 
 export default connect(

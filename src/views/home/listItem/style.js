@@ -72,7 +72,7 @@ const styles = StyleSheet.create({
     // paddingHorizontal: sizeWidth(2),
   },
   textPrice: {
-    color: COLOR.BUTTON,
+    color: 'red',
     fontSize: sizeFont(3.8),
     paddingVertical: sizeHeight(1),
     //paddingHorizontal: sizeWidth(2),

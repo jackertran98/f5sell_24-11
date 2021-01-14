@@ -17,6 +17,7 @@ import { COLOR } from "../../utils/color/colors";
 import { connect } from "react-redux";
 import { addToCart, removeAllToCart, removeToCart } from "../../action/orderAction";
 import { AlertCommonLogin } from "../../components/error";
+import {getConfigCommission} from '../../service/order'
 import styles from "./style";
 import IconComponets from "../../components/icon";
 import { handleMoney } from "../../components/money";
@@ -30,28 +31,74 @@ class Carts extends Component {
       SUM: 0,
       ok: false,
       rose: 0,
+      sumall: '',
+      moneyAll: 0,
+      tramtong:'',
     };
   }
+  checkTime = (a, b) => {
+    var start = a;
+    var end = b;
+    var datePart1 = start.split("/");
+    var datePart2 = end.split("/");
+    var dateObject1 = new Date(+datePart1[2], datePart1[1] - 1, +datePart1[0]);
+    var dateObject2 = new Date(+datePart2[2], datePart2[1] - 1, +datePart2[0]);
+    return dateObject2 - dateObject1;
+  }
   countPlus = (item) => {
+    this.handleHH();
     const { status, authUser } = this.props;
     item.COUNT = item.COUNT + 1;
-    this.setState({
-      SUM: this.state.SUM + parseInt(handleMoney(status, item, authUser)),
-    });
+    if (item.END_PROMOTION && this.checkTime(item.START_PROMOTION, item.END_PROMOTION) > 0) {
+      this.setState({
+        SUM: this.state.SUM + parseInt(item.PRICE_PROMOTION),
+        rose: this.state.rose + parseInt(item.PRICE_PROMOTION * 0.01 * item.COMISSION_PRODUCT)
+      });
+    } else {
+      this.setState({
+        SUM: this.state.SUM + parseInt(handleMoney(status, item, authUser)),
+        rose: this.state.rose + parseInt(item.PRICE * 0.01 * item.COMISSION_PRODUCT)
+      });
+    }
 
     //this.setState({ count: this.state.count + 1 });
   };
   countNagative = (item) => {
+    this.handleHH();
     const { status, authUser } = this.props;
     if (item.COUNT == 1) {
       return;
+    } else if (item.END_PROMOTION && this.checkTime(item.START_PROMOTION, item.END_PROMOTION) > 0) {
+      item.COUNT = item.COUNT - 1;
+      this.setState({
+        SUM: this.state.SUM - parseInt(item.PRICE_PROMOTION),
+        rose: this.state.rose - parseInt(item.PRICE_PROMOTION * 0.01 * item.COMISSION_PRODUCT)
+      });
     } else {
       item.COUNT = item.COUNT - 1;
       this.setState({
-        SUM: this.state.SUM - parseInt(handleMoney(status, item, authUser)),
+        SUM: this.state.SUM - parseInt(item.PRICE),
+        rose: this.state.rose - parseInt(item.PRICE * 0.01 * item.COMISSION_PRODUCT)
       });
     }
   };
+  handleHH=()=>{
+  
+    console.log(this.state.SUM);
+    getConfigCommission({
+      USERNAME: this.props.authUser.USERNAME,
+      VALUES: this.state.SUM,
+      IDSHOP: 'http://banbuonthuoc.moma.vn'
+    })
+      .then((res) => {
+        this.setState({
+          tramtong: res.data.VALUE,
+        })
+      })
+      .catch(() => {
+        console.log("Errrrr");
+      })
+  }
   componentDidMount() {
     const {
       navigation,
@@ -60,34 +107,46 @@ class Carts extends Component {
       authUser,
       status,
     } = this.props;
-    var Sum = 0;
-    var rose = 0;
+    var sum1 = 0;
+    var sum2 = 0;
+    var rose1 = 0;
+    var rose2 = 0;
+    var idsum1 = ""
+    var idsum2 = ""
     for (let i = 0; i < listItem.length; i++) {
       listItem[i].COUNT = 1;
-      Sum += parseInt(handleMoney(status, listItem[i], authUser));
-      // rose += parseInt(handleMoney(status, listItem[i], authUser)) * (parseInt(listItem[i].COMISSION_PRODUCT) / 100);
-      rose += parseInt(listItem[i].HHMAX);
+      if (listItem[i].END_PROMOTION && this.checkTime(listItem[i].START_PROMOTION, listItem[i].END_PROMOTION) > 0) {
+        sum1 += parseInt(listItem[i].PRICE_PROMOTION);
+        rose1 += parseInt(listItem[i].PRICE_PROMOTION * 0.01 * listItem[i].COMISSION_PRODUCT);
+        idsum1 += parseInt(listItem[i].PRICE_PROMOTION) + '#';
+      } else {
+        sum2 += parseInt(listItem[i].PRICE);
+        rose2 += parseInt(listItem[i].PRICE * 0.01 * listItem[i].COMISSION_PRODUCT);
+        idsum2 += parseInt(listItem[i].PRICE) + '#';
+      }
     }
     this.setState({
-      SUM: Sum,
-      rose: rose,
+      SUM: sum1 + sum2,
+      rose: rose1 + rose2,
+      sumall: idsum1 + idsum2,
+     
     });
     navigation.setParams({
       onDelete: () =>
         AlertCommonLogin(
           "Xác nhận",
           "Bạn có chắc chắn muốn xoá toàn bộ hàng hoá trong giỏ hàng?",
-          () => null,
           () => removeAllToCart(),
-          "Huỷ bỏ",
-          "Đồng ý"
+          () => null,
+          "Xoá tất cả",
+          "Huỷ"
         ),
     });
   }
   render() {
     const { listItem, authUser, status } = this.props;
-    const { count, SUM, rose } = this.state;
-    console.log("abc ", listItem);
+    const { count, SUM, rose, sumall, moneyAll,tramtong } = this.state;
+    console.log("this tramtong", tramtong);
     return (
       <View style={{ flex: 1 }}>
         <View style={{ flex: 1.2 }}>
@@ -114,26 +173,21 @@ class Carts extends Component {
                     />
                   </View>
                   <View style={{ marginTop: sizeHeight(3), flex: 3 }}>
-                   <View >
-                      <Text
-                        onPress={() => {
-                          AlertCommonLogin(
-                            "Xác nhận",
-                            "Bạn có chắc chắn muốn xoá đơn hàng ?",
-                            () => null,
-                            () => this.props.removeToCart(item),
-                            "Huỷ bỏ",
-                            "Đồng ý"
-                          )
-                          
-                        }}
-                        style={{position:'absolute',right:5,fontSize:sizeFont(6),top:-20,color:'red'}}>X</Text>
-                   </View>
+                    <View >
+                      <TouchableOpacity
+                        onPress={() => this.props.removeToCart(item)}
+                        style={{ position: 'absolute', right: 0, top: -15, color: 'red' }}>
+                        <Image
+                          source={require('../../assets/images/daux.png')}
+                          style={{ width: 20, height: 20 }}
+                        />
+                      </TouchableOpacity>
+                    </View>
                     <Text
                       style={{
                         fontSize: sizeFont(4),
                         marginLeft: sizeWidth(2),
-                        width:sizeWidth(60),
+                        width: sizeWidth(60),
                         paddingBottom: sizeHeight(1),
                         fontWeight: "bold",
                       }}
@@ -154,7 +208,12 @@ class Carts extends Component {
                       <Text
                         style={{ fontSize: sizeFont(4), color: "#F90000", fontWeight: "bold" }}
                       >
-                        {numeral(handleMoney(status, item, authUser)).format(
+                        {/* {numeral().format(
+                          "0,0"
+                        )} */}
+                        {item.END_PROMOTION && this.checkTime(item.START_PROMOTION, item.END_PROMOTION) > 0 ? numeral(item.PRICE_PROMOTION).format(
+                          "0,0"
+                        ) : numeral(item.PRICE).format(
                           "0,0"
                         )}
                         VNĐ
@@ -204,12 +263,12 @@ class Carts extends Component {
             style={{
               flexDirection: "row",
               justifyContent: "space-between",
-              marginVertical: sizeHeight(2),
+              marginVertical: sizeHeight(1),
               paddingHorizontal: sizeWidth(2),
             }}
           >
             <Text style={{ fontSize: sizeFont(4), fontWeight: "bold" }}>
-              Tổng tiền
+              Tổng tiền hàng
             </Text>
             <Text style={{ fontSize: sizeFont(4), fontWeight: "bold", color: "#F90000" }}>
               {numeral(listItem.length === 0 ? 0 : SUM).format("0,0")} VNĐ
@@ -219,18 +278,19 @@ class Carts extends Component {
             style={{
               flexDirection: "row",
               justifyContent: "space-between",
-              marginVertical: sizeHeight(2),
+              marginVertical: sizeHeight(1),
               paddingHorizontal: sizeWidth(2),
             }}
           >
             <Text style={{ fontSize: sizeFont(4), fontWeight: "bold" }}>
-              Hoa hồng tổng
+              Hoa hồng sản phẩm:
             </Text>
             <Text style={{ fontSize: sizeFont(4), fontWeight: "bold", color: "#149CC6" }}>
               {numeral(listItem.length === 0 ? 0 : rose).format("0,0")} VNĐ
             </Text>
           </View>}
-          <Text style={{ fontSize: 14, paddingLeft: 10, fontStyle: 'italic' }}>(Hoa hồng được cộng sau khi hoàn thành đơn hàng)</Text>
+          <Text style={{ fontSize: 14, paddingLeft: 10, fontStyle: 'italic' }}>(Chưa bao gồm phí vận chuyển)</Text>
+          {this.props.authUser.GROUPS == 8 ? null : <Text style={{ fontSize: 14, paddingLeft: 10, fontStyle: 'italic' }}>(Hoa hồng được cộng sau khi hoàn thành đơn hàng)</Text>}
           <View style={{ alignSelf: "center", marginTop: sizeHeight(2) }}>
             <TouchableOpacity
               style={{
@@ -246,7 +306,9 @@ class Carts extends Component {
                   SUM: this.state.SUM,
                   NAME: "Carts",
                   NUM: this.state.count,
-                  LIST:listItem,
+                  LIST: listItem,
+                  ROSE: rose,
+                  PRICEALL: sumall.substring(0, sumall.length - 1)
                 });
               }}
             >

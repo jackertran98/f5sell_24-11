@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { StyleSheet, Text, View, Image, TouchableOpacity, AlertCommon, Alert, TextInput, TouchableHighlight } from 'react-native';
 import { GetListCTV } from "../../../service/account";
 import Modal from 'react-native-modal';
-import { Getwithdrawal } from "../../../service/rose";
+import { Getwithdrawal, GetCTVDetail } from "../../../service/rose";
 import { changePass } from "../../../service/auth";
 import { FormTextInput } from "../../../components/textinput";
 import { COLOR } from "../../../utils/color/colors";
@@ -59,6 +59,7 @@ class UserChildren extends Component {
             loading: false,
             imageAvatar: '',
             photo: '',
+            ctvdetail:[],
             CMT_1: this.props.authUser.IMG1,
             CMT_2: this.props.authUser.IMG2,
             city:
@@ -84,7 +85,6 @@ class UserChildren extends Component {
             this.setState({ city: "", district: "", districChild: "" });
         } else {
             this.setState({ city: text, district: "", districChild: "" }, () => {
-                console.log(this.state.district, "2020202020202020");
             });
         }
     };
@@ -132,7 +132,7 @@ class UserChildren extends Component {
                 TENTK: tentk,
                 TENNH: tennh,
                 AVATAR: this.state.imageAvatar,
-                IDSHOP: this.props.idshop.USER_CODE,
+                IDSHOP: "ABC123",
                 DOB: '',
                 CMT: cmnd,
                 IMG1: CMT_1,
@@ -239,7 +239,7 @@ class UserChildren extends Component {
             END_TIME: this.state.endTime,
             PAGE: 1,
             NUMOFPAGE: 10,
-            IDSHOP: this.props.idshop.USER_CODE,
+            IDSHOP: "ABC123",
         })
             .then((res) => {
                 console.log("roseeee", res);
@@ -253,12 +253,29 @@ class UserChildren extends Component {
             })
             .catch((err) => {
             });
+            GetCTVDetail({
+                USERNAME: this.props.username,
+                USER_CTV: this.props.username,
+                IDSHOP: "ABC123",
+            })
+            .then((res) => {
+                console.log("ctvdetail", res);
+                if (res.data.ERROR == "0000") {
+                    this.setState({
+                        ctvdetail: res.data
+                    })
+                } else {
+                    console.log("errrrrro")
+                }
+            })
+            .catch((err) => {
+            });
+        
     }
     render() {
-        const { data, modalVisible, Rose, imageAvatar, usernam, email, stk, tentk, tennh, cmnd, photo, CMT_1, CMT_2,
+        const { data, modalVisible, Rose, imageAvatar, usernam, email, stk, tentk, tennh, cmnd,ctvdetail, CMT_1, CMT_2,
             city, passold, passnew, phone, address, district, districChild, loading, dateOfBirth } = this.state;
         console.log("authUser", this.props.authUser);
-        console.log("idshop", this.props.idshop);
         const { authUser } = this.props;
 
         return (
@@ -269,7 +286,7 @@ class UserChildren extends Component {
                     <View style={{ backgroundColor: '#28990D', height: sizeHeight(15), flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around' }}>
                         <View>
                             <Text style={{ color: 'white', fontSize: 16, fontWeight: 'bold' }}>{usernam}</Text>
-                            <Text style={{ color: 'white' }}>Mã user: {authUser.USER_CODE}</Text>
+                            <Text style={{ color: 'white' }}>Mã user: {ctvdetail.USER_CODE}</Text>
                         </View>
                         <View>
                             <TouchableOpacity
@@ -280,7 +297,7 @@ class UserChildren extends Component {
                                     justifyContent: 'center', alignItems: 'center',
                                 }}>
                                     <Image
-                                        source={imageAvatar === '' ? require('../../../assets/images/camera.png') : { uri: imageAvatar }}
+                                        source={ctvdetail.AVATAR === '' ? require('../../../assets/images/camera.png') : { uri: ctvdetail.AVATAR }}
                                         style={{ width: 65, height: 65, borderRadius: 50, backgroundColor: 'white' }}
                                     />
                                 </View>
@@ -310,6 +327,13 @@ class UserChildren extends Component {
                                 <Text>{authUser.GENDER}</Text>
                             </View>
                             <View style={styles.content}>
+                                <Text>Số điện thoại:</Text>
+                                <TextInput
+                                    value={ctvdetail.MOBILE==null?`null`:ctvdetail.MOBILE}
+                                    onChangeText={(text) => { this.setState({ phone: text }) }}
+                                />
+                            </View>
+                            <View style={styles.content}>
                                 <Text>Email:</Text>
                                 <TextInput
                                     value={email}
@@ -323,7 +347,7 @@ class UserChildren extends Component {
                             <View style={styles.content}>
                                 <Text>Ngày sinh:</Text>
                                 <TextInput
-                                    value={dateOfBirth}
+                                    value={ctvdetail.DOB}
                                     onChangeText={(text) => { this.setState({ dateOfBirth: text }) }}
                                 />
                             </View>

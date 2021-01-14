@@ -6,6 +6,7 @@ import { withDrawal } from "../../../service/auth";
 import DateTimePicker from '@react-native-community/datetimepicker';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { DataTable } from 'react-native-paper';
+import { COLOR } from "../../../utils/color/colors";
 import {
     sizeFont,
     sizeHeight,
@@ -106,19 +107,22 @@ class ctvsub extends Component {
         var mm = d.getMonth() + 1;
         var yy = d.getFullYear();
         var all = yy + "-" + mm + "-" + dd;
-
+        var dpressent = new Date();
         // console.log("this is all",date)
         var d1 = new Date(all);
-
         var d0 = d1.getTime();
         var d2 = date.getTime();
+        var dpre = dpressent.getTime();
 
         console.log(d0);
         console.log(d2);
+        console.log(dpre);
         if (d2 < d0) {
-            Alert.alert("Thông báo", "Thời gian không hợp lệ, mời nhập lại")
+            return Alert.alert("Thông báo", "Thời gian không hợp lệ, mời nhập lại")
         } else if (d2 - d0 < 5184000) {
-            Alert.alert("Thông báo", "Thời gian không được quá 60 ngày, mời nhập lại")
+            return Alert.alert("Thông báo", "Thời gian không được quá 60 ngày, mời nhập lại")
+        } else if (dpre < d2) {
+            return Alert.alert("Thông báo", "Bạn đã nhập quá thời gian hiện tại, mời nhập lại")
         }
         else {
             this.setState({
@@ -127,6 +131,7 @@ class ctvsub extends Component {
 
         }
         this.hideDatePicker2();
+
     };
     handleLoad = async () => {
         await Getwithdrawal({
@@ -136,10 +141,10 @@ class ctvsub extends Component {
             END_TIME: this.state.endTime,
             PAGE: 1,
             NUMOFPAGE: 10,
-            IDSHOP: this.props.idshop.USER_CODE,
+            IDSHOP: 'ABC123',
         })
             .then((res) => {
-                console.log("aaaaaaaaaaaaaaaaaaaaa",res)
+                console.log("aaaaaaaaaaaaaaaaaaaaa", res)
                 if (res.data.ERROR == "0000") {
                     this.setState({
                         Data: res.data.INFO
@@ -157,17 +162,17 @@ class ctvsub extends Component {
     render() {
         const { status, username } = this.props;
         const { date1, date2, Data, momney, loading } = this.state;
-        console.log("this is data_user",Data);
+        console.log("this is data_user", Data);
         return (
             <ScrollView nestedScrollEnabled={true}>
-                <View style={{ height: sizeHeight(13), width: '100%' }}>
-                    <View style={{height: sizeHeight(4.5), borderRadius: 5, backgroundColor: 'black', fontSize: 16,justifyContent:'center',alignItems:'center',marginTop:10}}>
-                    <Text style={{ color:'#fff' }}>
-                        Số dư hoa hồng hiện tại
-                     </Text>
+                <View style={{ height: sizeHeight(13), justifyContent: 'center', alignItems: 'center' }}>
+                    <View style={{ justifyContent: 'center', alignItems: 'center', height: sizeHeight(4.5), width: sizeWidth(100), backgroundColor: "#4a8939", marginTop: 10 }}>
+                        <Text style={{ color: '#fff', fontSize: 16 }}>
+                            Số dư hoa hồng hiện tại
+                </Text>
                     </View>
                     <View style={{ flex: 1, flexDirection: 'row' }}>
-                        <View style={{ flex: 1, flexDirection: 'row', paddingLeft: 10, alignItems: 'center' }}>
+                        <View style={{ flex: 1, flexDirection: 'row', paddingLeft: 10, alignItems: 'center', paddingTop: 10 }}>
                             <Image
                                 source={require('../../../assets/images/monney.png')}
                                 style={{
@@ -177,7 +182,7 @@ class ctvsub extends Component {
                             />
                             {status === "" ? (<Text style={{ fontSize: 15, color: '#FF5C03', alignItems: 'center', fontWeight: 'bold', paddingLeft: 5 }}>0 đ</Text>) : (
                                 <Text style={{ fontSize: 20, color: '#FF5C03', alignItems: 'center', fontWeight: 'bold', paddingLeft: 10, }}>
-                                    {Data.length === 0 ? null : <Text>{numeral(Data[0].BALANCE).format("0,0")}</Text>}
+                                    {Data.length === 0 ? '0' : <Text>{numeral(Data[0].BALANCE).format("0,0")}</Text>}
                                 </Text>
                             )}
                         </View>
@@ -191,48 +196,46 @@ class ctvsub extends Component {
                 }}>
                     <Text style={{ fontSize: 15, fontWeight: 'bold' }}>Lịch sử trả hoa hồng</Text>
                 </View>
-                <View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: 15 }}>
-                    <View style={styles.confix}>
-                        <TouchableOpacity
-                            onPress={this.showDatePicker1}
-                        >
-                            <Text style={{ fontSize: 12 }}>Bắt đầu</Text>
-                            <Text style={{ fontSize: 12 }}>{this.state.startTime}</Text>
-                        </TouchableOpacity>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', marginTop: 15 }}>
+                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                        <Text style={{ fontSize: 12, marginRight: 5 }}>Bắt đầu</Text>
+                        <View style={styles.confix}>
+                            <TouchableOpacity
+                                onPress={this.showDatePicker1}
+                            >
 
-                        <DateTimePickerModal
-                            isVisible={this.state.isDatePickerVisible}
-                            mode="date"
-                            onConfirm={this.handleConfirm1}
-                            onCancel={this.hideDatePicker1}
-                        />
+                                <Text style={{ fontSize: 12 }}>{this.state.startTime}</Text>
+                            </TouchableOpacity>
+
+                            <DateTimePickerModal
+                                isVisible={this.state.isDatePickerVisible}
+                                mode="date"
+                                onConfirm={this.handleConfirm1}
+                                onCancel={this.hideDatePicker1}
+                            />
+                        </View>
                     </View>
 
-                    <Image
-                        style={{ width: 40, height: 40, marginRight: 40 }}
-                        source={require('../../../assets/images/lich.png')}
-                    />
+                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                        <Text style={{ fontSize: 12, marginRight: 5 }}>Kết thúc</Text>
+                        <View style={styles.confix}>
+                            <TouchableOpacity
+                                onPress={this.showDatePicker2}
+                            >
 
-
-                    <View style={styles.confix}>
-                        <TouchableOpacity
-                            onPress={this.showDatePicker2}
-                        >
-                            <Text style={{ fontSize: 12 }}>Kết thúc</Text>
-                            <Text style={{ fontSize: 12 }}>{this.state.endTime}</Text>
-                        </TouchableOpacity>
-                        <DateTimePickerModal
-                            isVisible={this.state.inDateEndPicker}
-                            mode="date"
-                            onConfirm={this.handleConfirm2}
-                            onCancel={this.hideDatePicker2}
-                        />
+                                <Text style={{ fontSize: 12 }}>{this.state.endTime}</Text>
+                            </TouchableOpacity>
+                            <DateTimePickerModal
+                                isVisible={this.state.inDateEndPicker}
+                                mode="date"
+                                onConfirm={this.handleConfirm2}
+                                onCancel={this.hideDatePicker2}
+                            />
+                        </View>
                     </View>
 
-                    <Image
-                        style={{ width: 40, height: 40 }}
-                        source={require('../../../assets/images/lich.png')}
-                    />
+
+
                 </View>
                 <View>
                     <TouchableOpacity
@@ -245,7 +248,7 @@ class ctvsub extends Component {
                                     END_TIME: this.state.endTime,
                                     PAGE: 1,
                                     NUMOFPAGE: 10,
-                                    IDSHOP: this.props.idshop.USER_CODE,
+                                    IDSHOP: 'ABC123',
                                 })
                                     .then((res) => {
                                         if (res.data.ERROR == "0000") {
@@ -254,7 +257,9 @@ class ctvsub extends Component {
                                                 loading: false
                                             })
                                         } else {
-                                            Alert.alert("Thông báo", "Không có dữ liệu")
+                                            this.setState({
+                                                Data: []
+                                            })
                                         }
                                     })
                                     .catch((err) => {
@@ -283,8 +288,8 @@ class ctvsub extends Component {
                         </Text>
                     </TouchableOpacity>
                 </View>
-                <View>
-                    {loading === false ? <View>
+                {Data.length != 0 ? <View>
+                    {loading === false ? <View style={{ height: sizeHeight(40) }}>
                         <View style={styles.container1}>
                             <View style={[styles.cuttoms, styles.children1]}>
                                 <Text style={{ color: 'white' }}>Nội dung</Text>
@@ -294,31 +299,38 @@ class ctvsub extends Component {
                             </View>
                         </View>
                         <View>
-                            <ScrollView nestedScrollEnabled={true} style={{ marginTop: sizeHeight(1), height: sizeHeight(36), borderColor: '#149CC6', borderWidth: 2 }}>
+                            <ScrollView nestedScrollEnabled={true} style={{ marginTop: sizeHeight(0.2), height: sizeHeight(36), borderTopColor: '#149CC6', borderTopWidth: 1 }}>
                                 <View style={{ marginTop: -2 }}>
                                     {this.state.Data.map((Val, key) => (
-                                        <View key={key}>
+                                        <TouchableOpacity key={key} disabled={Val.TRANSACTION_TYPE == 1 ? false : true} onPress={() => this.props.navigation.navigate("DetailOrder", {
+                                            ID: Val.COMMENTS.substr(8,8),
+                                            NAME:'Rose'
+                                        })}>
                                             <View style={styles.container}>
                                                 <View style={styles.children}>
                                                     <Text >{Val.UPDATE_TIME}</Text>
                                                     <Text>{Val.COMMENTS}</Text>
                                                 </View>
                                                 <View style={{ alignItems: 'center', justifyContent: 'center', paddingRight: 10 }}>
-                                                    {Val.TRANSACTION_NAME === 'Trừ' ? <Text style={{ color: 'red' }}>- {numeral(Val.AMOUNT).format("0,0")}</Text> : <Text style={{ color: '#149CC6' }}>+ {numeral(Val.AMOUNT).format("0,0")}</Text>}
+                                                    {Val.TRANSACTION_TYPE == 2 ? <Text style={{ color: 'red' }}>- {numeral(Val.AMOUNT).format("0,0")} đ</Text> : <Text style={{ color: '#149CC6' }}>+ {numeral(Val.AMOUNT).format("0,0")} đ</Text>}
                                                 </View>
                                             </View>
-                                        </View>
+                                        </TouchableOpacity>
                                     ))}
 
                                 </View>
 
                             </ScrollView>
                         </View>
-                    </View> : <Loading />}
-                </View>
+                    </View> : <View style={{ height: sizeHeight(40) }}><Loading /></View>}
+                </View> : <View style={{ height: sizeHeight(40), justifyContent: 'center', alignItems: 'center' }}>
+                        <Text>Không có dữ liệu</Text>
+                    </View>}
+
+
                 <View style={{ height: 4, backgroundColor: '#B8C4C4', marginTop: sizeHeight(5) }}></View>
                 <View>
-                    <Text style={{ textAlign: 'center', fontSize: 16, padding: 4 }}>Yêu cầu trả hoa hồng</Text>
+                    {/* <Text style={{ textAlign: 'center', fontSize: 16, padding: 4 }}>Yêu cầu trả hoa hồng</Text>
                     <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
                         <TextInput
                             placeholder="Nhập số tiền yêu cầu"
@@ -333,7 +345,7 @@ class ctvsub extends Component {
                                     await withDrawal({
                                         USERNAME: username,
                                         AMOUNT: momney,
-                                        IDSHOP: this.props.idshop.USER_CODE,
+                                        IDSHOP: 'ABC123',
                                     })
                                         .then((res) => {
                                             Alert.alert('Thông báo', `${res.data.RESULT}`)
@@ -351,6 +363,14 @@ class ctvsub extends Component {
                     </View>
                     <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
                         <Text style={{ fontStyle: 'italic', }}><Text style={{ color: 'red' }}>*</Text> Lưu ý số tiền nhập không lớn hơn số dư hiện có</Text>
+                    </View> */}
+                    <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+                        <TouchableOpacity
+                            onPress={() => {
+                                this.props.navigation.navigate('detailrose')
+                            }}
+                            style={{ justifyContent: 'center', alignItems: 'center', marginTop: 10, width: sizeWidth(80), height: sizeHeight(5), backgroundColor: '#4a8939' }}
+                        ><Text style={{ color: '#fff', textAlign: 'center', fontSize: 16, padding: 4 }}>Yêu cầu trả hoa hồng</Text></TouchableOpacity>
                     </View>
                 </View>
             </ScrollView>
@@ -384,35 +404,37 @@ const styles = StyleSheet.create({
     container: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        borderWidth: 1,
+        borderWidth: 0.5,
         borderColor: '#149CC6',
     },
     children: {
         borderRightColor: '#149CC6',
-        borderRightWidth: 2,
+        borderRightWidth: 0.5,
         width: sizeWidth(70),
         justifyContent: 'center',
         padding: 8,
     },
     children1: {
-        width: sizeWidth(70)
+        width: sizeWidth(70),
+        borderRightColor: '#fff',
+        borderRightWidth: 0.5,
     },
     cuttoms: {
         marginTop: 5,
         padding: 10,
-        backgroundColor: "#E1AC06",
+        backgroundColor: "#4a8939",
         alignItems: 'center',
         width: sizeWidth(30),
     },
     confix: {
         width: sizeWidth(30),
-        borderColor: '#E1AC06',
+        borderColor: '#4a8939',
         paddingLeft: 10,
         paddingRight: 10,
-        borderWidth: 2,
+        borderWidth: 0.5,
         borderRadius: 5,
         height: sizeHeight(5),
-
+        justifyContent: 'center',
     },
 
 })

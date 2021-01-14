@@ -67,7 +67,7 @@ MyHomeStack = (props) => {
           title: "Đơn hàng",
           headerStyle: {
             backgroundColor: COLOR.HEADER,
-            height: Platform.OS == 'ios' ? sizeHeight(12) : sizeHeight(9),
+            height: Platform.OS=="ios" ?sizeHeight(12):sizeHeight(9),
           },
           headerTitleAlign: "center",
           headerTitleStyle: {
@@ -179,15 +179,15 @@ MyHomeStack = (props) => {
           headerTitleStyle: {
             color: "#fff",
           },
-          // headerLeft: () => (
-          //   <HeaderLeftComponet
-          //     navigation={navigation}
-          //     onPress={() => navigation.navigate(route.params.NAME)}
-          //     name="chevron-left"
-          //     size={sizeFont(6)}
-          //     color="#fff"
-          //   />
-          // ),
+          headerLeft: () => (
+            <HeaderLeftComponet
+              navigation={navigation}
+              onPress={() => navigation.navigate('Order')}
+              name="chevron-left"
+              size={sizeFont(6)}
+              color="#fff"
+            />
+          ),
           headerRight: () => (
             <HeaderRightComponet
               navigation={navigation}
